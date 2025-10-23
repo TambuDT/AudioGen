@@ -7,6 +7,7 @@ function TextsectionChirp3({ voiceName }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
   const [customPronunce, setCustomPronunce] = useState([]);
+  const SERVER_URL = "http://192.168.1.100:3001"; 
 
   function buildRequestBody() {
     let modifiedText = text;
@@ -35,7 +36,7 @@ function TextsectionChirp3({ voiceName }) {
       const requestBody = buildRequestBody();
       console.log("Richiesta TTS:", requestBody);
 
-      const response = await axios.post('http://localhost:3001/synthesize', requestBody);
+      const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
 
       if (response.data && response.data.audioContent) {
         setAudioSrc(`data:audio/mp3;base64,${response.data.audioContent}`);
