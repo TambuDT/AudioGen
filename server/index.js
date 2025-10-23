@@ -1,24 +1,22 @@
 const express = require("express");
 const cors = require("cors");
-
 const textToSpeech = require("@google-cloud/text-to-speech");
 
 // App setup
 const app = express();
 app.use(express.json());
-app.use(
-    cors({
-        origin: "http://localhost:3000"
 
-    })
-);
+// Permetti richieste da qualsiasi origine (LAN/Tailscale)
+app.use(cors({
+    origin: "*"  // In produzione, puoi sostituire "*" con un array di IP sicuri
+}));
 
-//Client per voci Chirp3 e Gemini
+// Client per voci Chirp3 e Gemini
 const client = new textToSpeech.TextToSpeechClient({
     keyFilename: "./rosandros-text2speech-0aac92d18d64.json",
 });
 
-//Endpoint per voci
+// Endpoint TTS
 app.post("/synthesize", async (req, res) => {
     try {
         const request = req.body;
@@ -27,12 +25,9 @@ app.post("/synthesize", async (req, res) => {
             return res.status(400).json({ error: "Campo 'input.text' mancante" });
         }
 
-        //Chiamata a Google Cloud TTS direttamente con la request inviata dal frontend
         const [response] = await client.synthesizeSpeech(request);
-
         console.log("Audio generato correttamente");
 
-        //Invia base64 al frontend
         res.json({
             success: true,
             audioContent: response.audioContent.toString("base64"),
@@ -43,8 +38,8 @@ app.post("/synthesize", async (req, res) => {
     }
 });
 
-//Avvio serve
+// Avvio server su tutte le interfacce
 const port = 3001;
-app.listen(port, () => {
-    console.log(`Server TTS in ascolto su http://localhost:${port}`);
+app.listen(port, "0.0.0.0", () => {
+    console.log(`Server TTS in ascolto su LAN/Tailscale alla porta ${port}`);
 });

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './textarea.css';
 import axios from 'axios';
 import { MdCancel } from "react-icons/md";
-
+const SERVER_URL = "http://192.168.1.60:3001";
 function TextsectionChirp3({ voiceName }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
@@ -35,7 +35,7 @@ function TextsectionChirp3({ voiceName }) {
       const requestBody = buildRequestBody();
       console.log("Richiesta TTS:", requestBody);
 
-      const response = await axios.post('http://localhost:3001/synthesize', requestBody);
+      const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
 
       if (response.data && response.data.audioContent) {
         setAudioSrc(`data:audio/mp3;base64,${response.data.audioContent}`);
