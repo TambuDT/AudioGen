@@ -1,0 +1,170 @@
+.textsection-container {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.text-section-title {
+    align-self: flex-start;
+}
+
+.text-section-subtitle {
+    align-self: flex-start;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.text-area {
+    width: 1000px;
+    height: 250px;
+    resize: none;
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 18px;
+    color: var(--clr-light-a0);
+    font-family: "Ubuntu", sans-serif;
+    background-color: var(--clr-surface-tonal-a0);
+}
+
+.text-area:focus {
+    outline: none;
+}
+
+.genera-button {
+    cursor: pointer;
+    background-color: var(--clr-success-a20);
+    border: 1px solid var(--clr-success-a20);
+    width: 230px;
+    height: 40px;
+    margin-top: 30px;
+    align-self: flex-end;
+    border-radius: 10px;
+    color: var(--clr-dark-a0);
+    font-size: 15px;
+}
+
+.genera-button-non-disponibile {
+    pointer-events: none;
+    background-color: var(--clr-warning-a20);
+    border: 1px solid var(--clr-dark-a0);
+    width: 230px;
+    height: 40px;
+    margin-top: 30px;
+    align-self: flex-end;
+    border-radius: 10px;
+    color: var(--clr-dark-a0);
+    font-size: 15px;
+}
+
+.parole-custom-container {
+    width: 1000px;
+    height: 250px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    resize: none;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    color: var(--text);
+    font-family: "Ubuntu", sans-serif;
+    margin-bottom: 40px;
+    border: 1px solid var(--clr-surface-a10);
+}
+
+.player-audio-generato {
+    align-self: flex-start;
+}
+
+.add-pronuncia-custom-title-container {
+    align-self: flex-start;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    width: 1000px;
+}
+
+.add-pronuncia-button {
+    align-self: center;
+    justify-self: center;
+    margin-top: 15px;
+    margin-left: 10px;
+    border-radius: 100px;
+    width: 30px;
+    height: 30px;
+    background-color: var(--clr-success-a0);
+    color: var(--clr-success-a20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-pronuncia-button p {
+    font-size: 30px;
+}
+
+.remove-pronuncia-button {
+    background-color: var(--clr-danger-a20);
+    color: var(--clr-danger-a0);
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 100px;
+    text-align: center;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-pronuncia-row {
+    background-color: var(--clr-surface-a10);
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.custom-pronuncia-input {
+    color: var(--clr-light-a0);
+    background-color: transparent;
+    border: none;
+    width: 300px;
+    height: 40px;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.custom-pronuncia-input:focus {
+    outline: none;
+}
+
+.pronuncia-button-conteiner {
+    display: flex;
+    flex-direction: row;
+    width: 150px;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.type-pronuncia-button {
+    background-color: var(--section-background);
+    color: var(--text);
+    width: 40px;
+    height: 30px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.type-pronuncia-button.selected {
+    background-color: var(--logo);
+    color: white;
+    border-color: #007bff;
+}

@@ -1,0 +1,138 @@
+.navbar {
+  position: sticky;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  top: 0;
+  height: var(--navbar-height);
+  width: 100%;
+  display: flex;
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: var(--clr-surface-a10);
+}
+
+.navbar ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  width: 100%;
+}
+
+.navbar ul li {
+  margin: 20px;
+  list-style: none;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 200px;
+  font-size: 25px;
+}
+
+.nav-mini-logo {
+  color: var(--clr-primary-a0);
+  margin-left: 10px;
+}
+
+.nav-logo-text {
+  color: var(--clr-light-a0);
+}
+
+.logout-conteiner {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  background-color: var(--clr-danger-a20);
+  color: var(--clr-dark-a0);
+}
+
+.sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign svg {
+  width: 15px;
+}
+
+.sign svg path {
+  fill: var(--clr-danger-a0);
+}
+
+.text {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  transition-duration: .3s;
+}
+
+.logout-button:hover {
+  width: 125px;
+  border-radius: 40px;
+  transition-duration: .3s;
+}
+
+.logout-button:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 20px;
+}
+
+.logout-button:hover .text {
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-right: 10px;
+}
+
+.logout-button:active {
+  transform: translate(2px, 2px);
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--clr-surface-tonal-a50);
+}
+
+.link.active {
+  color: var(--clr-primary-a20);
+}
+
+.link:hover {
+  color: var(--clr-light-a0);
+  transition-duration: 0.3s;
+}

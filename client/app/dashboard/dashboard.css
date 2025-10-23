@@ -1,0 +1,20 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--section-background);
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    overflow: auto;
+    scroll-behavior: smooth;
+}
+
+.section-one {
+    margin-top: 25px;
+    width: 90%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

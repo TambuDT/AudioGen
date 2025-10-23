@@ -1,0 +1,70 @@
+.login-container {
+    border-radius: 16px;
+    padding: 40px 35px;
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.logo-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--clr-primary-a50);
+}
+
+.login-text {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--clr-light-a0);
+    margin-bottom: 15px;
+}
+
+.input-field {
+    border: none;
+    border-bottom: 1px solid var(--clr-surface-tonal-a50);
+    background-color: transparent;
+    padding: 12px;
+    font-size: 0.95rem;
+    color: var(--clr-light-a0);
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.input-field::placeholder {
+    color: var(--clr-surface-a50);
+}
+
+.input-field:focus {
+    border: none;
+    border-bottom: 1px solid var(--clr-primary-a20);
+}
+
+.button {
+    background-color: var(--clr-primary-a20);
+    border: 1px solid var(--clr-primary-a20);
+    color: var(--clr-dark-a0);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: var(--clr-surface-a0);
+    border: 1px solid var(--clr-primary-a20);
+    color: var(--clr-primary-a20);
+}
+
+.footer-text {
+    font-size: 0.85rem;
+    text-align: center;
+    color: var(--clr-light-a0);
+}
+
+.t2s-mini-logo {
+    color: var(--clr-primary-a10);
+}
