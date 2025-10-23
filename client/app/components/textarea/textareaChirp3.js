@@ -7,7 +7,7 @@ function TextsectionChirp3({ voiceName }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
   const [customPronunce, setCustomPronunce] = useState([]);
-  const SERVER_URL = "http://192.168.1.100:3001"; 
+  const SERVER_URL = "http://192.168.1.60:3001";
 
   function buildRequestBody() {
     let modifiedText = text;
