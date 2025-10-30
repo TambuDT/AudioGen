@@ -41,5 +41,5 @@ app.post("/synthesize", async (req, res) => {
 // Avvio server su tutte le interfacce
 const port = 3001;
 app.listen(port, "0.0.0.0", () => {
-    console.log(`Server TTS in ascolto su LAN/Tailscale alla porta ${port}`);
+    console.log(`Server in ascolto su porta ${port}`);
 });
