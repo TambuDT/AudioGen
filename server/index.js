@@ -6,9 +6,8 @@ const textToSpeech = require("@google-cloud/text-to-speech");
 const app = express();
 app.use(express.json());
 
-// Permetti richieste da qualsiasi origine (LAN/Tailscale)
 app.use(cors({
-    origin: "*"  // In produzione, puoi sostituire "*" con un array di IP sicuri
+    origin: "*" 
 }));
 
 // Client per voci Chirp3 e Gemini
@@ -38,7 +37,6 @@ app.post("/synthesize", async (req, res) => {
     }
 });
 
-// Avvio server su tutte le interfacce
 const port = 3001;
 app.listen(port, "0.0.0.0", () => {
     console.log(`Server in ascolto su porta ${port}`);

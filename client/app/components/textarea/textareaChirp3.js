@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './textarea.css';
 import axios from 'axios';
 import { MdCancel } from "react-icons/md";
-const SERVER_URL = "http://localhost:3001";
+const SERVER_URL = `http://${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
 function TextsectionChirp3({ voiceName }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
