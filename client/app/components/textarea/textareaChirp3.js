@@ -7,6 +7,7 @@ function TextsectionChirp3({ voiceName }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
   const [customPronunce, setCustomPronunce] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   function buildRequestBody() {
     let modifiedText = text;
@@ -32,12 +33,14 @@ function TextsectionChirp3({ voiceName }) {
 
   async function handleSynthesize() {
     try {
+      setLoading(true);
       const requestBody = buildRequestBody();
       console.log("Richiesta TTS:", requestBody);
 
       const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
 
       if (response.data && response.data.audioContent) {
+        setLoading(false);
         setAudioSrc(`data:audio/mp3;base64,${response.data.audioContent}`);
       } else {
         console.error("Risposta senza audioContent:", response.data);
@@ -111,7 +114,14 @@ function TextsectionChirp3({ voiceName }) {
         {voiceName ? "Genera con voce " + voiceName : "Seleziona Una Voce"}
       </button>
 
-      <audio className='player-audio-generato' controls src={audioSrc} />
+      {
+        loading ? (
+          <p>Generazione in corso...</p>
+        ) : (
+          <audio className="player-audio-generato" controls src={audioSrc} />
+        )
+      }
+
     </div>
   );
 }

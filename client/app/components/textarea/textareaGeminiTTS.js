@@ -9,6 +9,9 @@ function TextsectionGemini({ voiceName }) {
   const [audioSrc, setAudioSrc] = useState(null);
   const [customPronunce, setCustomPronunce] = useState([]);
   const SERVER_URL = `http://${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
+
+  const [loading, setLoading] = useState(false);
+
   function buildRequestBody() {
     let modifiedText = text;
 
@@ -45,12 +48,14 @@ function TextsectionGemini({ voiceName }) {
 
   async function handleSynthesize() {
     try {
+      setLoading(true);
       const requestBody = buildRequestBody();
       console.log("Richiesta TTS:", requestBody);
 
       const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
 
       if (response.data?.audioContent) {
+        setLoading(false);
         setAudioSrc(`data:audio/mp3;base64,${response.data.audioContent}`);
       } else {
         console.error("Risposta senza audioContent:", response.data);
@@ -139,7 +144,13 @@ function TextsectionGemini({ voiceName }) {
         {voiceName ? "Genera con voce " + voiceName : "Seleziona Una Voce"}
       </button>
 
-      <audio className="player-audio-generato" controls src={audioSrc} />
+      {
+        loading ? (
+          <p>Generazione in corso...</p>
+        ) : (
+          <audio className="player-audio-generato" controls src={audioSrc} />
+        )
+      }
     </div>
   );
 }
