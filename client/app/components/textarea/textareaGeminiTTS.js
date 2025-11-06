@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { MdCancel } from "react-icons/md";
 import "./textarea.css";
-
+const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
 function TextsectionGemini({ voiceName }) {
   const [text, setText] = useState("");
   const [promptStile, setpromptStile] = useState("");
   const [audioSrc, setAudioSrc] = useState(null);
   const [customPronunce, setCustomPronunce] = useState([]);
-  const SERVER_URL = `http://${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
 
   const [loading, setLoading] = useState(false);
 
