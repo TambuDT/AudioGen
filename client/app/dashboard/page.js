@@ -22,9 +22,9 @@ function Dashboard() {
           {model === "GeminiTTS" ? (
             <TextsectionGemini voiceName={voice} />
           ) : (
-            <TextsectionChirp3 voiceName={voice} />
+            <TextsectionChirp3 voiceName={voice} onPresetLoad={setVoice}/>
           )}
-          <VoiceSelector onVoiceChange={setVoice} />
+          <VoiceSelector onVoiceChange={setVoice} voiceFromPreset={voice} />
         </section>
         <section className="section-one">
           <AudioMixer />

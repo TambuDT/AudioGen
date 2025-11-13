@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './voiceselector.css';
 import { FaPause } from "react-icons/fa6";
 import { FaPlay } from "react-icons/fa";
@@ -11,7 +11,7 @@ const arrayVoci = [
   "Vindemiatrix", "Zephyr", "Zubenelgenubi"
 ];
 
-export function VoiceSelector({ onVoiceChange }) {
+export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [playingVoice, setPlayingVoice] = useState(null);
   const audioRefs = useRef({});
@@ -20,6 +20,13 @@ export function VoiceSelector({ onVoiceChange }) {
     setSelectedVoice(voce);
     onVoiceChange?.(voce);
   };
+
+  // Aggiorna selectedVoice quando cambia la prop voiceFromPreset
+  useEffect(() => {
+    if (voiceFromPreset && voiceFromPreset !== selectedVoice) {
+      setSelectedVoice(voiceFromPreset);
+    }
+  }, [voiceFromPreset, selectedVoice]);
 
   const handlePlayPause = (voce) => {
     const audio = audioRefs.current[voce];
@@ -39,7 +46,6 @@ export function VoiceSelector({ onVoiceChange }) {
       setPlayingVoice(voce);
     }
   };
-
 
   const handleEnded = (voce) => {
     if (playingVoice === voce) {
@@ -66,11 +72,10 @@ export function VoiceSelector({ onVoiceChange }) {
               onEnded={() => handleEnded(voce)}
             />
 
-
             <div
               className='play-pause-btn'
               onClick={(e) => {
-                e.stopPropagation(); 
+                e.stopPropagation();
                 handlePlayPause(voce);
               }}
             >

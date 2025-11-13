@@ -13,9 +13,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* permette di crescere fino al max-height del container */
     min-height: 80px;
-    /* altezza minima */
     justify-content: space-between;
 }
 
@@ -44,6 +42,17 @@
     padding: 15px;
     font-size: 16px;
     color: var(--clr-light-a0);
+}
+
+.saveloadpreset-clear-button{
+    background-color: var(--clr-warning-a0);
+    border-radius: 10px;
+    width: 150px;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    color: var(--clr-light-a0);
+    margin-left: 10px;
 }
 
 .preset-item {
@@ -115,7 +124,7 @@
 .dialog-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: hsla(0, 0%, 0%, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,7 +140,6 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   text-align: center;
   color : #333;
-  user-select: text;
 }
 
 .dialog-box h3{

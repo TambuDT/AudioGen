@@ -1,29 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import './saveloadpreset.css';
 import { client } from '@/app/appwrite/appwrite';
-import { TablesDB, Query } from 'appwrite';
+import { Databases, Query, ID } from 'appwrite';
 
-function Saveloadpreset({ currentPage }) {
+function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setPronunceCustom }) {
   const [searchInput, setSearchInput] = useState('');
   const [presetsList, setPresetsList] = useState([]);
-  const [deleteDialog, setDeleteDialog] = useState(null); // {id, name} oppure null
+  const [deleteDialog, setDeleteDialog] = useState(null);
   const [confirmInput, setConfirmInput] = useState('');
 
-  const tablesdb = new TablesDB(client);
+  const databases = new Databases(client);
+  const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
+  const collectionId = 'presetchirp3';
 
+  //carica i preset
   const handleLoadPreset = async () => {
     try {
-      const doc = await tablesdb.listRows({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: 'presetchirp3',
-        queries: [Query.select(['*'])]
-      });
-      setPresetsList(doc.rows);
+      const doc = await databases.listDocuments(databaseId, collectionId, [
+        Query.select(['presetName', 'voice', 'substitutions']),
+      ]);
+
+      // Appwrite restituisce array di stringhe correttamente
+      const parsedPresets = doc.documents.map(preset => ({
+        ...preset,
+        substitutions: Array.isArray(preset.substitutions)
+          ? preset.substitutions
+          : [],
+      }));
+
+      setPresetsList(parsedPresets);
     } catch (error) {
       console.error('Errore durante il caricamento dei preset:', error);
     }
   };
 
+  // elimina preset
   const openDeleteDialog = (preset) => {
     setDeleteDialog(preset);
     setConfirmInput('');
@@ -33,11 +44,7 @@ function Saveloadpreset({ currentPage }) {
     if (confirmInput !== deleteDialog.presetName) return;
 
     try {
-      await tablesdb.deleteRow(
-        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        'presetchirp3',
-        deleteDialog.$id
-      );
+      await databases.deleteDocument(databaseId, collectionId, deleteDialog.$id);
       setDeleteDialog(null);
       await handleLoadPreset();
     } catch (error) {
@@ -45,11 +52,65 @@ function Saveloadpreset({ currentPage }) {
     }
   };
 
+
+  //carica il preset selezionato
+  const handleLoadSelectedPreset = (preset) => {
+    // Aggiorna la voce
+    setVoice(preset.voice);
+
+    // Trasforma array piatto [originale1, sostituta1, originale2, sostituta2, ...]
+    const customPronunceFromPreset = [];
+    for (let i = 0; i < preset.substitutions.length; i += 2) {
+      customPronunceFromPreset.push({
+        parola: preset.substitutions[i],
+        sostituzione: preset.substitutions[i + 1] || "",
+      });
+    }
+
+    // Aggiorna customPronunce
+    setPronunceCustom(customPronunceFromPreset);
+  };
+
+
+
+
+  //salva preset
+  const handleSavePreset = async () => {
+    const name = prompt('Inserisci il nome del preset:');
+    if (!name) return;
+
+    // Trasforma l'array di oggetti in array piatto [originale1, sostituta1, originale2, sostituta2, ...]
+    const flatSubstitutions = customPronunce.flatMap(item => [item.parola, item.sostituzione]);
+
+    // Controllo lunghezza di ogni parola
+    if (flatSubstitutions.some(str => str.length > 100)) {
+      alert('Ogni parola deve essere lunga al massimo 100 caratteri');
+      return;
+    }
+
+    try {
+      await databases.createDocument(databaseId, collectionId, ID.unique(), {
+        presetName: name,
+        voice: voiceName,
+        substitutions: flatSubstitutions, // <-- salva array piatto
+      });
+      await handleLoadPreset();
+    } catch (error) {
+      console.error('Errore durante il salvataggio del preset:', error);
+    }
+  };
+
+  // resetta la voce e le pronunce custom
+  const handleClearPreset = () => {
+    setVoice(""); 
+    setPronunceCustom([]);
+  };
+
+
   const CopyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     alert(`Nome del preset copiato: "${text}"`);
   };
-
 
   useEffect(() => {
     handleLoadPreset();
@@ -79,11 +140,8 @@ function Saveloadpreset({ currentPage }) {
             <div key={preset.$id} className='preset-item'>
               <h3>{preset.presetName}</h3>
               <div className='preset-item-buttons'>
-                <button className='saveloadpreset-carica-button'>Carica</button>
-                <button
-                  className='saveloadpreset-elimina-button'
-                  onClick={() => openDeleteDialog(preset)}
-                >
+                <button className='saveloadpreset-carica-button' onClick={() => handleLoadSelectedPreset(preset)}>Carica</button>
+                <button className='saveloadpreset-elimina-button' onClick={() => openDeleteDialog(preset)}>
                   Elimina
                 </button>
               </div>
@@ -92,15 +150,31 @@ function Saveloadpreset({ currentPage }) {
         </div>
 
         <div className='saveloadpreset-main-right'>
-          <h4 className='text-section-subtitle'>Salva il preset attuale</h4>
-          <button className='saveloadpreset-salva-button'>Salva Preset</button>
+          <h4 className='text-section-subtitle'>Salva il preset attuale, pulisci il progetto</h4>
+          <button
+            className='saveloadpreset-salva-button'
+            onClick={() => handleSavePreset()}
+          >
+            Salva Preset
+          </button>
+
+          <button
+            className='saveloadpreset-clear-button'
+            onClick={() => handleClearPreset()}
+          >
+            Rimuovi Preset
+          </button>
+
+
         </div>
       </div>
 
       {deleteDialog && (
         <div className='dialog-overlay'>
           <div className='dialog-box'>
-            <h3 onClick={() => CopyToClipboard(deleteDialog.presetName)}>Stai per eliminare il preset "{deleteDialog.presetName}"?</h3>
+            <h3 onClick={() => CopyToClipboard(deleteDialog.presetName)}>
+              Stai per eliminare il preset "{deleteDialog.presetName}"?
+            </h3>
             <p>
               Questa azione è <strong>irreversibile</strong>.<br />
               Per confermare, digita il nome del preset:
@@ -113,7 +187,10 @@ function Saveloadpreset({ currentPage }) {
               placeholder='Scrivi il nome esatto del preset'
             />
             <div className='dialog-buttons'>
-              <button onClick={() => setDeleteDialog(null)} className='dialog-cancel'>
+              <button
+                onClick={() => setDeleteDialog(null)}
+                className='dialog-cancel'
+              >
                 Annulla
               </button>
               <button
