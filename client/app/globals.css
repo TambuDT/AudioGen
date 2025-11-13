@@ -50,7 +50,7 @@
   --clr-info-a20: #92b2e5;
 
   /** variables */
-  --navbar-height: 80px;
+  --navbar-height: 80px !important;
 }
 
 html,

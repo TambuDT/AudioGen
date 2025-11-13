@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import './textarea.css';
 import axios from 'axios';
 import { MdCancel } from "react-icons/md";
+import Saveloadpreset from '../saveloadpreset/Saveloadpreset';
 const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
 function TextsectionChirp3({ voiceName }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
   const [customPronunce, setCustomPronunce] = useState([]);
   const [loading, setLoading] = useState(false);
+  const currentPage="Chirp3";
 
   function buildRequestBody() {
     let modifiedText = text;
@@ -68,6 +70,12 @@ function TextsectionChirp3({ voiceName }) {
 
   return (
     <div className='textsection-container'>
+
+
+      <Saveloadpreset currentPage={currentPage} ></Saveloadpreset>
+
+
+
       <h1 className='text-section-title'>Text to Speech</h1>
       <h4 className='text-section-subtitle'>Inserisci il testo da convertire in audio</h4>
 
