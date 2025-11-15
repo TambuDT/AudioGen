@@ -12,7 +12,7 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
 
   const databases = new Databases(client);
   const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
-  const collectionId = 'presetchirp3';
+  const collectionId = process.env.NEXT_PUBLIC_PRESET_COLLECTION_ID;
 
   //carica i preset
   const handleLoadPreset = async () => {
