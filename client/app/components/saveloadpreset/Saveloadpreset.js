@@ -8,6 +8,7 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
   const [presetsList, setPresetsList] = useState([]);
   const [deleteDialog, setDeleteDialog] = useState(null);
   const [confirmInput, setConfirmInput] = useState('');
+  const [currentPreset, setCurrentPreset] = useState(null);
 
   const databases = new Databases(client);
   const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
@@ -55,6 +56,9 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
 
   //carica il preset selezionato
   const handleLoadSelectedPreset = (preset) => {
+
+    setCurrentPreset(preset);
+
     // Aggiorna la voce
     setVoice(preset.voice);
 
@@ -72,10 +76,52 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
   };
 
 
+  const handleUpdatePreset = async () => {
+    if (!currentPreset) {
+      alert('Nessun preset caricato da aggiornare.');
+      return;
+    }
+
+    const flatSubstitutions = customPronunce.flatMap(item => [item.parola, item.sostituzione]);
+
+    try {
+      await databases.updateDocument(
+        databaseId,
+        collectionId,
+        currentPreset.$id,
+        {
+          voice: voiceName,
+          substitutions: flatSubstitutions
+        }
+      );
+
+      alert('Modifiche salvate con successo.');
+    } catch (error) {
+      console.error("Errore durante l'aggiornamento del preset:", error);
+    }
+  };
+
 
 
   //salva preset
   const handleSavePreset = async () => {
+
+    //controllo sulla voce selezionata, deve esseer selezionata per forza prima di salvare
+    if (!voiceName) {
+      alert('Seleziona una voce prima di salvare il preset.');
+      return;
+    }
+
+    //controllo sulle pronunce custom
+    if (customPronunce.length === 0) {
+      if (confirm('Stai creando un preset senza sostituzioni personalizzate, premi OK per continuare o Annulla per tornare indietro.')) {
+        // continua con il salvataggio
+      } else {
+        return;
+      }
+    }
+
+    //chiedi nome preset e salva
     const name = prompt('Inserisci il nome del preset:');
     if (!name) return;
 
@@ -102,10 +148,10 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
 
   // resetta la voce e le pronunce custom
   const handleClearPreset = () => {
-    setVoice(""); 
-    setPronunceCustom([]);
+    setVoice(null);            // deseleziona voice nel selettore
+    setPronunceCustom([]);   // svuota sostituzioni
+    setCurrentPreset(null);  // rimuove il preset attivo
   };
-
 
   const CopyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
@@ -150,19 +196,26 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
         </div>
 
         <div className='saveloadpreset-main-right'>
-          <h4 className='text-section-subtitle'>Salva il preset attuale, pulisci il progetto</h4>
+          <h4 className='text-section-subtitle'>Azioni sui preset / progetto</h4>
           <button
-            className='saveloadpreset-salva-button'
+            className='saveloadpreset-actions-button'
             onClick={() => handleSavePreset()}
           >
-            Salva Preset
+            Crea Preset
           </button>
 
           <button
-            className='saveloadpreset-clear-button'
+            className='saveloadpreset-actions-button'
+            onClick={() => handleUpdatePreset()}
+          >
+            Salva Modifiche
+          </button>
+
+          <button
+            className='saveloadpreset-actions-button'
             onClick={() => handleClearPreset()}
           >
-            Rimuovi Preset
+            Pulisci progetto
           </button>
 
 

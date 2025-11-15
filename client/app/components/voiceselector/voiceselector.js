@@ -23,10 +23,18 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
 
   // Aggiorna selectedVoice quando cambia la prop voiceFromPreset
   useEffect(() => {
-    if (voiceFromPreset && voiceFromPreset !== selectedVoice) {
+    // Se voiceFromPreset è null o stringa vuota → deseleziona
+    if (!voiceFromPreset) {
+      setSelectedVoice(null);
+      return;
+    }
+
+    // Altrimenti seleziona la voce indicata dal preset
+    if (voiceFromPreset !== selectedVoice) {
       setSelectedVoice(voiceFromPreset);
     }
   }, [voiceFromPreset, selectedVoice]);
+
 
   const handlePlayPause = (voce) => {
     const audio = audioRefs.current[voce];

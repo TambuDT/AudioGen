@@ -182,3 +182,17 @@
   background: #999;
   cursor: not-allowed;
 }
+
+.saveloadpreset-actions-button{
+  background-color: var(--clr-surface-tonal-a0);
+  color: var(--clr-surface-tonal-a50);
+  border: 1px solid var(--clr-surface-tonal-a10);
+  margin: 5px;
+  padding: 9px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.saveloadpreset-actions-button:hover{
+  background-color: var(--clr-surface-tonal-a10);
+  color: var(--clr-light-a0);
+}
