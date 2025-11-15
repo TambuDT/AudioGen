@@ -230,7 +230,7 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
             </h3>
             <p>
               Questa azione è <strong>irreversibile</strong>.<br />
-              Per confermare, digita il nome del preset:
+              Per confermare, digita il nome del preset o copialo cliccandoci sopra.:
             </p>
             <input
               type='text'
