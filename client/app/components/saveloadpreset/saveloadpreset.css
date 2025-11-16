@@ -34,26 +34,6 @@
     height: 150px;
     margin: 5px 0px 5px 0px;
 }
-.saveloadpreset-salva-button{
-    background-color: var(--clr-primary-a0);
-    border-radius: 10px;
-    width: 150px;
-    border: none;
-    padding: 15px;
-    font-size: 16px;
-    color: var(--clr-light-a0);
-}
-
-.saveloadpreset-clear-button{
-    background-color: var(--clr-warning-a0);
-    border-radius: 10px;
-    width: 150px;
-    border: none;
-    padding: 15px;
-    font-size: 16px;
-    color: var(--clr-light-a0);
-    margin-left: 10px;
-}
 
 .preset-item {
     color: var(--clr-light-a0);
@@ -97,29 +77,6 @@
 .saveloadpreset-search-input:focus {
     outline: none;
 }
-
-.saveloadpreset-carica-button {
-    background-color: var(--clr-success-a0);
-    border-radius: 10px;
-    width: 80px;
-    border: none;
-    padding: 10px;
-    margin: 9px;
-    font-size: 15px;
-    color: var(--clr-light-a0);
-}
-
-.saveloadpreset-elimina-button {
-    background-color: var(--clr-danger-a0);
-    border-radius: 10px;
-    width: 80px;
-    border: none;
-    padding: 10px;
-    margin: 9px;
-    font-size: 15px;
-    color: var(--clr-light-a0);
-}
-
 
 .dialog-overlay {
   position: fixed;

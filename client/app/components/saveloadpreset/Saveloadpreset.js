@@ -169,7 +169,7 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
   return (
     <div className='saveloadpreset-container'>
       <h1 className='text-section-title'>Preset per {currentPage}</h1>
-      <h4 className='text-section-subtitle'>Carica un preset</h4>
+      <h4 className='text-section-subtitle'>Carica o Elimina un Preset</h4>
       <div className='saveloadpreset-main'>
         <div className='saveloadpreset-search'>
           <input
@@ -186,8 +186,8 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
             <div key={preset.$id} className='preset-item'>
               <h3>{preset.presetName}</h3>
               <div className='preset-item-buttons'>
-                <button className='saveloadpreset-carica-button' onClick={() => handleLoadSelectedPreset(preset)}>Carica</button>
-                <button className='saveloadpreset-elimina-button' onClick={() => openDeleteDialog(preset)}>
+                <button className='saveloadpreset-actions-button' onClick={() => handleLoadSelectedPreset(preset)}>Carica</button>
+                <button className='saveloadpreset-actions-button' onClick={() => openDeleteDialog(preset)}>
                   Elimina
                 </button>
               </div>
@@ -196,7 +196,7 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
         </div>
 
         <div className='saveloadpreset-main-right'>
-          <h4 className='text-section-subtitle'>Azioni sui preset / progetto</h4>
+          <h4 className='text-section-subtitle'>Azioni sul Preset / Progetto</h4>
           <button
             className='saveloadpreset-actions-button'
             onClick={() => handleSavePreset()}
@@ -215,7 +215,7 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
             className='saveloadpreset-actions-button'
             onClick={() => handleClearPreset()}
           >
-            Pulisci progetto
+            Pulisci Progetto
           </button>
 
 
