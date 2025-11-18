@@ -1,4 +1,6 @@
 .navbar {
+  background-color: var(--background-emelents);
+  backdrop-filter: blur(10px);
   position: sticky;
   margin: 0;
   border: 0;
@@ -11,7 +13,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: var(--clr-surface-a10);
 }
 
 .navbar ul {
@@ -34,11 +35,17 @@
   flex-direction: row;
   width: 200px;
   font-size: 25px;
+  color: var(--text-color);
 }
 
 .nav-mini-logo {
-  color: var(--clr-primary-a0);
   margin-left: 10px;
+  background-color: var(--gray-7);
+  color: var(--gray-0);
+  border-radius: 100px;
+  padding: 5px;
+  font-size: 40px;
+  margin-right: 10px;
 }
 
 .nav-logo-text {
@@ -65,8 +72,8 @@
   position: relative;
   overflow: hidden;
   transition-duration: .3s;
-  background-color: var(--clr-danger-a20);
-  color: var(--clr-dark-a0);
+  background-color: var(--gray-7);
+  color: var(--gray-0);
 }
 
 .sign {
@@ -82,7 +89,7 @@
 }
 
 .sign svg path {
-  fill: var(--clr-danger-a0);
+  fill: var(--gray-0);
 }
 
 .text {
@@ -125,14 +132,14 @@
   width: 100px;
   cursor: pointer;
   font-size: 18px;
-  color: var(--clr-surface-tonal-a50);
+  color: var(--gray-5);
 }
 
 .link.active {
-  color: var(--clr-primary-a20);
+  color: var(--text-color);
 }
 
 .link:hover {
-  color: var(--clr-light-a0);
+  color: var(--gray-7);
   transition-duration: 0.3s;
 }

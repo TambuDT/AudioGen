@@ -11,19 +11,19 @@
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 5px;
-    color: var(--clr-primary-a50);
+    color: var(--text-color);
 }
 
 .login-text {
     font-size: 0.95rem;
     font-weight: 400;
-    color: var(--clr-light-a0);
+    color: var(--text-color);
     margin-bottom: 15px;
 }
 
 .input-field {
     border: none;
-    border-bottom: 1px solid var(--clr-surface-tonal-a50);
+    border-bottom: 1px solid var(--gray-1);
     background-color: transparent;
     padding: 12px;
     font-size: 0.95rem;
@@ -38,13 +38,13 @@
 
 .input-field:focus {
     border: none;
-    border-bottom: 1px solid var(--clr-primary-a20);
+    border-bottom: 1px solid var(--gray-1);
 }
 
 .button {
-    background-color: var(--clr-primary-a20);
-    border: 1px solid var(--clr-primary-a20);
-    color: var(--clr-dark-a0);
+    background-color: var(--gray-1);
+    border: 1px solid var(--gray-1);
+    color: var(--text-color);
     border-radius: 10px;
     padding: 12px;
     font-size: 1rem;
@@ -54,17 +54,16 @@
 }
 
 .button:hover {
-    background-color: var(--clr-surface-a0);
-    border: 1px solid var(--clr-primary-a20);
-    color: var(--clr-primary-a20);
+    background-color: var(--background);
+    border: 1px solid var(--gray-1);
 }
 
 .footer-text {
     font-size: 0.85rem;
     text-align: center;
-    color: var(--clr-light-a0);
+    color: var(--gray-5);
 }
 
 .t2s-mini-logo {
-    color: var(--clr-primary-a10);
+    color: var(--text-color);
 }

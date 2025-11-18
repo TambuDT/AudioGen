@@ -4,16 +4,21 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    border-radius: 15px;
+    background-color: var(--background-emelents);
+    border: 1px solid var(--gray-0);
 }
 
 .text-section-title {
     align-self: flex-start;
+    color: var(--text-color);
 }
 
 .text-section-subtitle {
     align-self: flex-start;
     margin-top: 40px;
     margin-bottom: 20px;
+    color: var(--gray-6);
 }
 
 .text-area {
@@ -24,9 +29,10 @@
     border-radius: 10px;
     padding: 20px;
     font-size: 18px;
-    color: var(--clr-light-a0);
+    color: var(--light-text-color);
     font-family: "Ubuntu", sans-serif;
-    background-color: var(--clr-surface-tonal-a0);
+    background-color: var(--background-emelents);
+    border: 1px solid var(--gray-0);
 }
 
 .text-area:focus {
@@ -35,8 +41,9 @@
 
 .genera-button {
     cursor: pointer;
-    background-color: var(--clr-success-a20);
-    border: 1px solid var(--clr-success-a20);
+    background-color: var(--gray-7);
+    border: 1px solid var(--gray-7);
+    color: var(--gray-0);
     width: 230px;
     height: 40px;
     margin-top: 30px;
@@ -47,15 +54,15 @@
 }
 
 .genera-button-non-disponibile {
-    pointer-events: none;
-    background-color: var(--clr-warning-a20);
-    border: 1px solid var(--clr-dark-a0);
+    cursor: not-allowed;
+    background-color: var(--gray-0);
+    border: 1px solid var(--gray-0);
     width: 230px;
     height: 40px;
     margin-top: 30px;
     align-self: flex-end;
     border-radius: 10px;
-    color: var(--clr-dark-a0);
+    color: var(--gray-7);
     font-size: 15px;
 }
 
@@ -71,7 +78,8 @@
     color: var(--text);
     font-family: "Ubuntu", sans-serif;
     margin-bottom: 40px;
-    border: 1px solid var(--clr-surface-a10);
+    border: 1px solid var(--gray-0);
+    background-color: var(--background-emelents);
 }
 
 .player-audio-generato {
@@ -94,8 +102,8 @@
     border-radius: 100px;
     width: 30px;
     height: 30px;
-    background-color: var(--clr-success-a0);
-    color: var(--clr-success-a20);
+    background-color: var(--gray-7);
+    color: var(--gray-0);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -106,8 +114,8 @@
 }
 
 .remove-pronuncia-button {
-    background-color: var(--clr-danger-a20);
-    color: var(--clr-danger-a0);
+    background-color: var(--gray-7);
+    color: var(--gray-0);
     width: 30px;
     height: 30px;
     border: none;
@@ -120,18 +128,18 @@
 }
 
 .custom-pronuncia-row {
-    background-color: var(--clr-surface-a10);
-    height: 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px;
-    margin: 5px;
+    padding: 12px 18px;
+    color: var(--gray-7);
     border-radius: 10px;
+    background-color: var(--gray-0);
+    margin: 5px;
 }
 
 .custom-pronuncia-input {
-    color: var(--clr-light-a0);
+    color: var(--light-text-color);
     background-color: transparent;
     border: none;
     width: 300px;
@@ -161,10 +169,4 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.type-pronuncia-button.selected {
-    background-color: var(--logo);
-    color: white;
-    border-color: #007bff;
 }

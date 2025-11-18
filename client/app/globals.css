@@ -1,53 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
 :root {
-  /** Base colors */
-  --clr-dark-a0: #000000;
-  --clr-light-a0: #ffffff;
+  /** colori **/
+  --background:#0a0a0a;
+  --background-emelents:#121212d5;
+  --text-color:#ffffff;
+  --light-text-color:#E7E7E7;
 
-  /** Theme primary colors */
-  --clr-primary-a0: #437efd;
-  --clr-primary-a10: #638bfe;
-  --clr-primary-a20: #7c99fe;
-  --clr-primary-a30: #92a7ff;
-  --clr-primary-a40: #a6b5ff;
-  --clr-primary-a50: #b9c3ff;
+  /** gray shade **/
+  --gray-0:#1D1D1D;
+  --gray-1:#2A2A2A;
+  --gray-2:#353535;
+  --gray-3:#414141;
+  --gray-4:#595959;
+  --gray-5:#888888;
+  --gray-6:#B8B8B8;
+  --gray-7:#E7E7E7;
 
-  /** Theme surface colors */
-  --clr-surface-a0: #121212;
-  --clr-surface-a10: #282828;
-  --clr-surface-a20: #3f3f3f;
-  --clr-surface-a30: #575757;
-  --clr-surface-a40: #717171;
-  --clr-surface-a50: #8b8b8b;
-
-  /** Theme tonal surface colors */
-  --clr-surface-tonal-a0: #1a1c26;
-  --clr-surface-tonal-a10: #2f313a;
-  --clr-surface-tonal-a20: #464750;
-  --clr-surface-tonal-a30: #5d5f67;
-  --clr-surface-tonal-a40: #76777e;
-  --clr-surface-tonal-a50: #909197;
-
-  /** Success colors */
-  --clr-success-a0: #22946e;
-  --clr-success-a10: #47d5a6;
-  --clr-success-a20: #9ae8ce;
-
-  /** Warning colors */
-  --clr-warning-a0: #a87a2a;
-  --clr-warning-a10: #d7ac61;
-  --clr-warning-a20: #ecd7b2;
-
-  /** Danger colors */
-  --clr-danger-a0: #9c2121;
-  --clr-danger-a10: #d94a4a;
-  --clr-danger-a20: #eb9e9e;
-
-  /** Info colors */
-  --clr-info-a0: #21498a;
-  --clr-info-a10: #4077d1;
-  --clr-info-a20: #92b2e5;
 
   /** variables */
   --navbar-height: 80px !important;
@@ -68,8 +37,8 @@ body {
 }
 
 body {
-  color: var(--clr-light-a0);
-  background: var(--clr-surface-a0);
+  color: var(--text-color);
+  background: var(--background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -1,9 +1,15 @@
 .musicpicker-container {
   width: 400px;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-self: flex-start;
+  color: var(--text-color);
+  background-color: var(--background-emelents);
+  border: 1px solid var(--gray-0);
+  margin-left: 10px;
+  padding: 15px;
+  border-radius: 15px;
 }
 
 .music-section-title {
@@ -17,8 +23,7 @@
   overflow-y: scroll;
   flex-direction: column;
   scrollbar-width: none;
-  border-radius: 10px;
-  background-color: var(--clr-surface-tonal-a0);
+  background-color: var(--background-emelents);
 }
 
 .music-item {
@@ -26,12 +31,15 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 18px;
-  border-bottom: 1px solid var(--clr-surface-a30);
+  color: var(--gray-7);
+  border-radius: 10px;
+  background-color: var(--gray-0);
+  margin: 5px;
 }
 
 .music-item:hover {
-  background-color: var(--clr-info-a20);
-  color: var(--clr-dark-a0);
+  background-color: var(--gray-7);
+  color: var(--gray-0);
 }
 
 .music-name {
@@ -52,8 +60,8 @@
 }
 
 .music-item.selected {
-  background-color: var(--clr-success-a20);
-  color: var(--clr-dark-a0);
+  background-color: var(--gray-2);
+  color: var(--gray-7);
 }
 
 .play-pause-btn {
@@ -74,4 +82,5 @@
 
 .music-section-subtitle {
   margin-bottom: 20px;
+  color: var(--gray-6);
 }

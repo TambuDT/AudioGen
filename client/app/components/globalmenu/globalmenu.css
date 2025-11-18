@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap');
+
 .globalmenu-container {
     position: relative;
     margin-top: 25px;
@@ -5,6 +7,9 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    color: var(--light-text-color);
+    font-family: "Momo Trust Display", sans-serif;
+    font-size: 20px;
 }
 
 .globalmenu {
@@ -20,13 +25,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100px;
+    width: 150px;
     height: 30px;
     border-bottom: 2px solid transparent;
 }
 
 .globalmenu label.selected {
-    border-bottom: 2px solid var(--clr-light-a0);
+    border-bottom: 2px solid var(--light-text-color);
 }
 
 .globalmenu-title {

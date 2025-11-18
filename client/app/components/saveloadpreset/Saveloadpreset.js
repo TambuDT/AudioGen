@@ -186,8 +186,8 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
             <div key={preset.$id} className='preset-item'>
               <h3>{preset.presetName}</h3>
               <div className='preset-item-buttons'>
-                <button className='saveloadpreset-actions-button' onClick={() => handleLoadSelectedPreset(preset)}>Carica</button>
-                <button className='saveloadpreset-actions-button' onClick={() => openDeleteDialog(preset)}>
+                <button className='loaddelete-actions-button' onClick={() => handleLoadSelectedPreset(preset)}>Carica</button>
+                <button className='loaddelete-actions-button' onClick={() => openDeleteDialog(preset)}>
                   Elimina
                 </button>
               </div>

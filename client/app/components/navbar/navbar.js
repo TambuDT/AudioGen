@@ -25,12 +25,15 @@ function Navbar({ page }) {
       <ul>
         <li className="nav-logo"><LuAudioWaveform className="nav-mini-logo" /><label className='nav-logo-text'>AudioGen</label></li>
         <ul className="nav-links">
+
+          {/*
           <li className={`link ${page === "Dashboard" ? "active" : ""}`}>
             Dashboard
           </li>
           <li className={`link ${page === "Create" ? "active" : ""}`}>
             Create
           </li>
+          */}
         </ul>
         <li className="logout-conteiner">
           <button className="logout-button" onClick={logout}>
