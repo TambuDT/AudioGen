@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Stack+Sans+Headline:wght@200..700&display=swap');
 
 .globalmenu-container {
     position: relative;
@@ -8,7 +8,7 @@
     justify-content: center;
     flex-direction: column;
     color: var(--light-text-color);
-    font-family: "Momo Trust Display", sans-serif;
+    font-family: "Stack Sans Headline", sans-serif;
     font-size: 20px;
 }
 
