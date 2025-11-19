@@ -15,6 +15,17 @@ const client = new textToSpeech.TextToSpeechClient({
     keyFilename: "./rosandros-text2speech-0aac92d18d64.json",
 });
 
+
+app.post("/listvoices", async (req, res) => {
+    try {
+        const [result] = await client.listVoices({});
+        res.json({ voices: result.voices });
+    } catch (err) {
+        console.error("Errore nel recupero delle voci:", err);
+        res.status(500).json({ error: "Errore nel recupero delle voci" });
+    }
+});
+
 // Endpoint TTS
 app.post("/synthesize", async (req, res) => {
     try {

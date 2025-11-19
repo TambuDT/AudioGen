@@ -38,8 +38,8 @@
 }
 
 .music-item:hover {
-  background-color: var(--gray-7);
-  color: var(--gray-0);
+  background-color: var(--gray-2);
+  color: var(--gray-7);
 }
 
 .music-name {
@@ -60,8 +60,8 @@
 }
 
 .music-item.selected {
-  background-color: var(--gray-2);
-  color: var(--gray-7);
+  background-color: var(--gray-7);
+  color: var(--gray-0);
 }
 
 .play-pause-btn {
