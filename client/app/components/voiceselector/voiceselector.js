@@ -12,25 +12,20 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
   const [arrayVoci, setArrayVoci] = useState([]);
   const audioRefs = useRef({});
 
-  // Carica solo le voci compatibili con Chirp3
+  // Carica le voci dal backend
   useEffect(() => {
     const loadArrayVoci = async () => {
       try {
         const response = await axios.post(`${SERVER_URL}/listvoices`, {});
-        const voices = response.data.voices;
-
-        // Filtra solo le voci Chirp3 italiane
-        const chirp3Voices = voices
-          .filter(v => 
-            v.name.includes('Chirp3') && 
-            v.languageCodes.includes('it-IT')
-          )
-          .map(v => v.name.replace(/^it-IT-Chirp3-HD-/, '')); // Rimuove il prefisso per il rendering
-
-        setArrayVoci(chirp3Voices);
-        console.log('Voci Chirp3 italiane:', chirp3Voices);
-      } catch (err) {
-        console.error("Errore caricando le voci:", err);
+        const voci = response.data.voci; // l'array deve arrivare così dal backend
+        if (Array.isArray(voci)) {
+          setArrayVoci(voci);
+          console.log('Voci Chirp3 italiane:', voci);
+        } else {
+          console.error('Formato delle voci non corretto:', voci);
+        }
+      } catch (error) {
+        console.error('Errore nel caricamento delle voci:', error);
       }
     };
     loadArrayVoci();
@@ -89,7 +84,7 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
 
             <audio
               ref={(el) => (audioRefs.current[voce] = el)}
-              src={`https://cloud.google.com/text-to-speech/docs/audio/it-IT-Chirp3-HD-${voce}.wav`}
+              src={`${SERVER_URL}/vociCampionario/${voce}.mp3`}
               onEnded={() => handleEnded(voce)}
             />
 
