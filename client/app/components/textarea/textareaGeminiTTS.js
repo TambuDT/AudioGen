@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { MdCancel } from "react-icons/md";
 import "./textarea.css";
+import AudioPlayer from "../audioplayer/AudioPlayer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
 function TextsectionGemini({ voiceName }) {
   const [text, setText] = useState("");
@@ -108,7 +111,7 @@ function TextsectionGemini({ voiceName }) {
           Aggiungi parole da sostituire con pronunce personalizzate
         </h4>
         <div className="add-pronuncia-button" onClick={addRow}>
-          <p>+</p>
+          <FontAwesomeIcon icon={faPlus} />
         </div>
       </div>
 
@@ -130,7 +133,7 @@ function TextsectionGemini({ voiceName }) {
               className="custom-pronuncia-input"
             />
             <div className="remove-pronuncia-button" onClick={() => removeRow(idx)}>
-              <MdCancel />
+              <FontAwesomeIcon icon={faX} />
             </div>
           </div>
         ))}
@@ -143,11 +146,14 @@ function TextsectionGemini({ voiceName }) {
         {voiceName ? "Genera con voce " + voiceName : "Seleziona Una Voce"}
       </button>
 
+      
       {
         loading ? (
-          <p>Generazione in corso...</p>
+          <p className='testo-generazione-in-corso'>Generazione in corso...</p>
         ) : (
-          <audio className="player-audio-generato" controls src={audioSrc} />
+          <>
+            <AudioPlayer audioSrc={audioSrc}></AudioPlayer>
+          </>
         )
       }
     </div>

@@ -3,7 +3,11 @@ import './textarea.css';
 import axios from 'axios';
 import { MdCancel } from "react-icons/md";
 import Saveloadpreset from '../saveloadpreset/Saveloadpreset';
+import AudioPlayer from '../audioplayer/AudioPlayer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from '@fortawesome/free-solid-svg-icons';
 const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
+
 function TextsectionChirp3({ voiceName, onPresetLoad }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
@@ -115,7 +119,7 @@ function TextsectionChirp3({ voiceName, onPresetLoad }) {
               className='custom-pronuncia-input'
             />
             <div className='remove-pronuncia-button' onClick={() => removeRow(idx)}>
-              <MdCancel />
+              <FontAwesomeIcon icon={faX} />
             </div>
           </div>
         ))}
@@ -130,9 +134,11 @@ function TextsectionChirp3({ voiceName, onPresetLoad }) {
 
       {
         loading ? (
-          <p>Generazione in corso...</p>
+          <p className='testo-generazione-in-corso'>Generazione in corso...</p>
         ) : (
-          <audio className="player-audio-generato" controls src={audioSrc} />
+          <>
+            <AudioPlayer audioSrc={audioSrc}></AudioPlayer>
+          </>
         )
       }
 

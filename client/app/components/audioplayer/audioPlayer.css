@@ -1,0 +1,41 @@
+.custom-audio-player-container {
+    background-color: var(--gray-0);
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.custom-audio-player-seek {
+    width: 150px;
+    margin: 0 10px;
+    accent-color: var(--light-text-color);
+    border-radius: 5px;
+    height: 5px;
+    cursor: pointer;
+}
+.custom-audio-player-play-pause{
+    background-color: var(--gray-2);
+    color: var(--light-text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;        
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.custom-audio-player-downlaod{
+    background-color: var(--gray-2);
+    color: var(--light-text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;        
+    width: 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}

@@ -46,23 +46,25 @@
     color: var(--gray-0);
     width: 230px;
     height: 40px;
-    margin-top: 30px;
-    align-self: flex-end;
+    margin-top: 10px;
+    align-self: flex-start;
     border-radius: 10px;
     font-size: 15px;
+    margin-bottom: 15px;
 }
 
 .genera-button-non-disponibile {
     cursor: not-allowed;
     background-color: var(--gray-0);
     border: 1px solid var(--gray-0);
+    color: var(--gray-7);
     width: 230px;
     height: 40px;
-    margin-top: 30px;
-    align-self: flex-end;
+    margin-top: 10px;
+    align-self: flex-start;
     border-radius: 10px;
-    color: var(--gray-7);
     font-size: 15px;
+    margin-bottom: 15px;
 }
 
 .parole-custom-container {
@@ -119,8 +121,7 @@
     height: 30px;
     border: none;
     border-radius: 100px;
-    text-align: center;
-    font-size: 25px;
+    font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -168,4 +169,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.testo-generazione-in-corso {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 53px;
 }
