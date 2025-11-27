@@ -6,6 +6,7 @@
   --background-emelents:#121212d5;
   --text-color:#ffffff;
   --light-text-color:#E7E7E7;
+  
 
   /** gray shade **/
   --gray-0:#1D1D1D;
@@ -31,7 +32,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   width: 100vw;
   user-select: none;
 }

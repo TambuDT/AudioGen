@@ -7,8 +7,8 @@ import Navbar from "../components/navbar/navbar";
 import TextsectionGemini from "../components/textarea/textareaGeminiTTS";
 import TextsectionChirp3 from "../components/textarea/textareaChirp3";
 import { VoiceSelector } from "../components/voiceselector/voiceselector"
-import AudioMixer from "../components/daw/daw";
 import Globalmenu from "../components/globalmenu/Globalmenu";
+import Daw from "../components/daw/daw";
 
 function Dashboard() {
   const [voice, setVoice] = useState();
@@ -26,9 +26,12 @@ function Dashboard() {
           )}
           <VoiceSelector onVoiceChange={setVoice} voiceFromPreset={voice} />
         </section>
-        <section className="section-one">
-          <AudioMixer />
+        <section className="section-two">
+          <Daw/>
         </section>
+        <footer className="dashboard-footer">
+          <p className="created-by">Created by <a className="created-by-name" href="https://github.com/TambuDT">Davide Tamburrelli</a>, Powered by <a className="created-by-powered"  href="https://nextjs.org/">Next.js</a></p>
+        </footer>
       </div>
     </PrivateRoute>
   );
