@@ -30,7 +30,7 @@ function Dashboard() {
           <Daw/>
         </section>
         <footer className="dashboard-footer">
-          <p className="created-by">Created by <a className="created-by-name" href="https://github.com/TambuDT">Davide Tamburrelli</a>, Powered by <a className="created-by-powered"  href="https://nextjs.org/">Next.js</a></p>
+          <p className="created-by">Created by <a className="created-by-name" href="https://github.com/TambuDT">TMB</a>, Powered by <a className="created-by-powered"  href="https://nextjs.org/">Next.js</a></p>
         </footer>
       </div>
     </PrivateRoute>
