@@ -6,7 +6,7 @@ import Saveloadpreset from '../saveloadpreset/Saveloadpreset';
 import AudioPlayer from '../audioplayer/AudioPlayer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
-const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}`;
+const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
 
 function TextsectionChirp3({ voiceName, onPresetLoad }) {
   const [text, setText] = useState('');
