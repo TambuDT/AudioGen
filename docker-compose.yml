@@ -1,26 +1,43 @@
+version: "3.9"
+
 services:
   backend:
     build: ./server
     container_name: node-backend
     restart: unless-stopped
-    ports:
-      - "3001:3001"
     networks:
       - app-network
+    labels:
+      - "traefik.enable=true"
+
+      # ROUTER API
+      - "traefik.http.routers.audiogen-api.rule=Host(`audiogen.radiorosandros.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.audiogen-api.entrypoints=websecure"
+      - "traefik.http.routers.audiogen-api.tls=true"
+
+      # SERVICE API
+      - "traefik.http.services.audiogen-api.loadbalancer.server.port=3001"
 
   frontend:
     build: ./client
     container_name: next-frontend
     restart: unless-stopped
-    ports:
-      - "80:3000"
-    depends_on:
-      - backend
-    environment:
-      - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://backend:3001
     networks:
       - app-network
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=https://audiogen.radiorosandros.com
+    labels:
+      - "traefik.enable=true"
+
+      # ROUTER FRONTEND
+      - "traefik.http.routers.audiogen-front.rule=Host(`audiogen.radiorosandros.com`)"
+      - "traefik.http.routers.audiogen-front.entrypoints=websecure"
+      - "traefik.http.routers.audiogen-front.tls=true"
+
+      # SERVICE FRONTEND
+      - "traefik.http.services.audiogen-front.loadbalancer.server.port=3000"
 
 networks:
   app-network:
+    external: true

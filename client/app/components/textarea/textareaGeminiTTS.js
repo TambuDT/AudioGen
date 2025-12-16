@@ -5,7 +5,7 @@ import "./textarea.css";
 import AudioPlayer from "../audioplayer/AudioPlayer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPlus, faX } from "@fortawesome/free-solid-svg-icons";
-const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
+const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}`;
 function TextsectionGemini({ voiceName }) {
   const [text, setText] = useState("");
   const [promptStile, setpromptStile] = useState("");

@@ -4,7 +4,7 @@ import { FaPause } from "react-icons/fa6";
 import { FaPlay } from "react-icons/fa";
 import axios from 'axios';
 
-const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
+const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}`;
 
 export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
   const [selectedVoice, setSelectedVoice] = useState(null);
@@ -16,7 +16,7 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
   useEffect(() => {
     const loadArrayVoci = async () => {
       try {
-        const response = await axios.post(`${SERVER_URL}/listvoices`, {});
+        const response = await axios.post(`${SERVER_URL}/api/listvoices`, {});
         const voci = response.data.voci; // l'array deve arrivare così dal backend
         if (Array.isArray(voci)) {
           setArrayVoci(voci);
@@ -84,7 +84,7 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
 
             <audio
               ref={(el) => (audioRefs.current[voce] = el)}
-              src={`${SERVER_URL}/vociCampionario/${voce}.mp3`}
+              src={`${SERVER_URL}/api/vociCampionario/${voce}.mp3`}
               onEnded={() => handleEnded(voce)}
             />
 
