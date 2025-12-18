@@ -9,10 +9,17 @@ import TextsectionChirp3 from "../components/textarea/textareaChirp3";
 import { VoiceSelector } from "../components/voiceselector/voiceselector"
 import Globalmenu from "../components/globalmenu/Globalmenu";
 import Daw from "../components/daw/daw";
+import RecentCreations from "../components/recentscreations/recentCreations";
 
 function Dashboard() {
+  const [arrayCreazioni, setArrayCreazioni] = useState([]);
   const [voice, setVoice] = useState();
   const [model, setModel] = useState("Chirp3");
+
+  const addCreazione = (creazione) => {
+    setArrayCreazioni(prev => [...prev, creazione]);
+  };
+
   return (
     <PrivateRoute>
       <div className="dashboard-container">
@@ -20,17 +27,20 @@ function Dashboard() {
         <Globalmenu voiceModel={setModel} currentModel={model}></Globalmenu>
         <section className="section-one">
           {model === "GeminiTTS" ? (
-            <TextsectionGemini voiceName={voice} />
+            <TextsectionGemini voiceName={voice} onCreate={addCreazione}/>
           ) : (
-            <TextsectionChirp3 voiceName={voice} onPresetLoad={setVoice}/>
+            <TextsectionChirp3 voiceName={voice} onCreate={addCreazione} onPresetLoad={setVoice} />
           )}
-          <VoiceSelector onVoiceChange={setVoice} voiceFromPreset={voice} />
+          <div className="voice-recents-container">
+            <VoiceSelector onVoiceChange={setVoice} voiceFromPreset={voice} />
+            <RecentCreations creations={arrayCreazioni} />
+          </div>
         </section>
         <section className="section-two">
-          <Daw/>
+          <Daw />
         </section>
         <footer className="dashboard-footer">
-          <p className="created-by">Created by <a className="created-by-name" href="https://github.com/TambuDT">TMB</a>, Powered by <a className="created-by-powered"  href="https://nextjs.org/">Next.js</a></p>
+          <p className="created-by">Created by <a className="created-by-name" href="https://github.com/TambuDT">TMB</a>, Powered by <a className="created-by-powered" href="https://nextjs.org/">Next.js</a></p>
         </footer>
       </div>
     </PrivateRoute>

@@ -69,7 +69,7 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
     if (playingVoice === voce) setPlayingVoice(null);
   };
 
-  return (
+  return (<>
     <div className='musicpicker-container'>
       <h1 className='music-section-title'>Selezione voci</h1>
       <h4 className='music-section-subtitle'>Clicca su una voce per selezionarla</h4>
@@ -101,5 +101,6 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
         ))}
       </div>
     </div>
+  </>
   );
 }

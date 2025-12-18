@@ -1,6 +1,6 @@
 .musicpicker-container {
   width: 400px;
-  height: auto;
+  height: 700px;
   display: flex;
   flex-direction: column;
   align-self: flex-start;

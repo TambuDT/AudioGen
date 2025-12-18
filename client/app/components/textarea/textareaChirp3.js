@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import './textarea.css';
 import axios from 'axios';
-import { MdCancel } from "react-icons/md";
 import Saveloadpreset from '../saveloadpreset/Saveloadpreset';
 import AudioPlayer from '../audioplayer/AudioPlayer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
 
-function TextsectionChirp3({ voiceName, onPresetLoad }) {
+function TextsectionChirp3({ voiceName, onPresetLoad, onCreate }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
   const [customPronunce, setCustomPronunce] = useState([]);
@@ -37,24 +36,32 @@ function TextsectionChirp3({ voiceName, onPresetLoad }) {
   }
 
 
-  async function handleSynthesize() {
-    try {
-      setLoading(true);
-      const requestBody = buildRequestBody();
-      console.log("Richiesta TTS:", requestBody);
+async function handleSynthesize() {
+  try {
+    setLoading(true);
+    const requestBody = buildRequestBody();
 
-      const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
+    const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
 
-      if (response.data && response.data.audioContent) {
-        setLoading(false);
-        setAudioSrc(`data:audio/mp3;base64,${response.data.audioContent}`);
-      } else {
-        console.error("Risposta senza audioContent:", response.data);
-      }
-    } catch (err) {
-      console.error("Errore richiesta:", err);
+    if (response.data?.audioContent) {
+      const newAudioSrc = `data:audio/mp3;base64,${response.data.audioContent}`;
+
+      setAudioSrc(newAudioSrc);
+      onCreate({
+        id: Date.now(),
+        audioSrc: newAudioSrc,
+        model: "Chirp3",
+      });
+    } else {
+      console.error("Risposta senza audioContent:", response.data);
     }
+  } catch (err) {
+    console.error("Errore richiesta:", err);
+  } finally {
+    setLoading(false);
   }
+}
+
 
   function addRow() {
     setCustomPronunce(prev => [...prev, { parola: "", sostituzione: "" }]);

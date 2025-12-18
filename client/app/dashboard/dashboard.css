@@ -43,3 +43,7 @@
 .created-by a {
     color: var(--gray-7);
 }
+
+.voice-recents-container{
+    align-self: flex-start;
+}
