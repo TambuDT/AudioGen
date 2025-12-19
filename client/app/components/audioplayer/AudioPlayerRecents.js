@@ -4,7 +4,9 @@ import { faPlay, faPause, faDownload } from '@fortawesome/free-solid-svg-icons';
 import React, { useRef, useState, useEffect } from "react";
 import './audioPlayer.css';
 
-function AudioPlayer({ audioSrc }) {
+function AudioPlayerRecents({ audioSrc, audioModel, audioName }) {
+    
+    const [fileName, setFileName] = useState(audioName);
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
@@ -53,8 +55,12 @@ function AudioPlayer({ audioSrc }) {
         setCurrentTime(newTime);
     };
 
+
     return (
         <div className="custom-audio-player-container">
+            <div className='custom-audio-player-title-container'>
+                <input type="text" className='custom-audio-player-title' value={fileName} onChange={(e) => setFileName(e.target.value)}></input>
+            </div>
             <div className="custom-audio-player-controls">
             <audio ref={audioRef} src={audioSrc} preload="metadata" />
             <button className="custom-audio-player-play-pause" onClick={handlePlayPause}>
@@ -69,12 +75,13 @@ function AudioPlayer({ audioSrc }) {
                 value={currentTime}
                 onChange={handleSeek}
             />
-            <a className='custom-audio-player-download' href={audioSrc} download>
+            <a className='custom-audio-player-download' href={audioSrc} download={`${fileName}.mp3`}>
                <FontAwesomeIcon icon={faDownload} />
             </a>
+            <label className="custom-audio-player-model-type">{audioModel}</label>
             </div>
         </div>
     );
 }
 
-export default AudioPlayer;
+export default AudioPlayerRecents;

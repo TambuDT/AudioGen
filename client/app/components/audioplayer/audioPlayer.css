@@ -5,9 +5,15 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-      margin: 5px;
+    margin: 5px;
+    flex-direction: column;
 }
-
+.custom-audio-player-controls{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
 .custom-audio-player-seek {
     width: 150px;
     margin: 0 10px;
@@ -39,4 +45,29 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
+}
+.custom-audio-player-model-type{
+    background-color: var(--gray-2);
+    padding: 7px;
+    border-radius: 10px;
+    width: 70px;
+    text-align: center;
+    margin-left: 10px;
+}
+.custom-audio-player-title-container{
+    padding-left: 0px;
+    padding-right: 10px;
+    width: 100%;
+    margin: 5px;
+}
+
+.custom-audio-player-title{
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    color: var(--light-text-color);
+    width: 100%;
+}
+.custom-audio-player-title:focus{
+    outline: none;
 }

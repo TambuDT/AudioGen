@@ -1,15 +1,21 @@
 import React from 'react'
 import './recentCreations.css'
-import AudioPlayer from '../audioplayer/AudioPlayer'
+import AudioPlayerRecents from '../audioplayer/AudioPlayerRecents'
 function RecentCreations({ creations }) {
     return (
         <div className='recentcreations-container'>
             <h1 className='music-section-title'>Creazioni Recenti</h1>
             <h4 className='music-section-subtitle'>Ascolta e scarica le creazioni recenti</h4>
-            <div className='music-list-container'>
-                {creations.map((c, i) => (
-                    <AudioPlayer key={c.id} audioSrc={c.audioSrc} audioModel={c.model} />
+            <div className='recents-creations-container'>
+                {[...creations].reverse().map(c => (
+                    <AudioPlayerRecents
+                        key={c.id}
+                        audioSrc={c.audioSrc}
+                        audioModel={c.model}
+                        audioName={c.audioName}
+                    />
                 ))}
+
             </div>
         </div>
     )

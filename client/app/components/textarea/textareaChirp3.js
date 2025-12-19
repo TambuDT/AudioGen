@@ -51,6 +51,7 @@ async function handleSynthesize() {
         id: Date.now(),
         audioSrc: newAudioSrc,
         model: "Chirp3",
+        audioName: "Untitled",
       });
     } else {
       console.error("Risposta senza audioContent:", response.data);

@@ -63,6 +63,7 @@ function TextsectionGemini({ voiceName, onCreate }) {
         id: Date.now(),
         audioSrc: newAudioSrc,
         model: "Gemini",
+        audioName: "Untitled",
       });
     } else {
       console.error("Risposta senza audioContent:", response.data);
