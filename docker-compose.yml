@@ -1,10 +1,12 @@
+version: "3.8"
+
 services:
   backend:
     build: ./server
     container_name: node-backend
     restart: unless-stopped
-    ports:
-      - "3001:3001"
+    expose:
+      - "3001"   # esposto solo alla rete interna
     networks:
       - app-network
 
@@ -18,9 +20,10 @@ services:
       - backend
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://backend:3001
+      - NEXT_PUBLIC_API_URL=/api   # URL relativo
     networks:
       - app-network
 
 networks:
   app-network:
+    driver: bridge

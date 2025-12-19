@@ -4,7 +4,7 @@ import { FaPause } from "react-icons/fa6";
 import { FaPlay } from "react-icons/fa";
 import axios from 'axios';
 
-const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}:3001`;
+const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}`;
 
 export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
   const [selectedVoice, setSelectedVoice] = useState(null);
