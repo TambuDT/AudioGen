@@ -151,7 +151,7 @@ function TextsectionGemini({ voiceName, onCreate }) {
         className={voiceName ? "genera-button" : "genera-button-non-disponibile"}
         onClick={handleSynthesize}
       >
-        {voiceName ? "Genera con voce " + voiceName : "Seleziona Una Voce"}
+        {voiceName ? "Genera" : "Seleziona Una Voce"}
       </button>
 
       
