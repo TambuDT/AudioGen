@@ -199,7 +199,6 @@ export function VoiceSelector({ onVoiceChange }) {
               value={voce.vocePersonalizzata}
               placeholder={voce.voceOriginale}
               aria-label={`Nome personalizzato per ${voce.voceOriginale}`}
-              onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 // Lascia passare lo spazio senza propagazione
                 if (e.key === ' ') {
