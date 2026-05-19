@@ -11,11 +11,11 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@google-cloud/text-to-speech": "^6.3.1",
-    "@google/genai": "^1.25.0",
-    "axios": "^1.12.2",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0"
+    "@google-cloud/text-to-speech": "^6.4.1",
+    "@google/genai": "^2.4.0",
+    "axios": "^1.16.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
   }
 }
