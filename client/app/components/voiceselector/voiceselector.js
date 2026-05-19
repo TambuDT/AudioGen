@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './voiceselector.css';
 import { FaPause, FaPlay } from 'react-icons/fa';
@@ -8,7 +9,7 @@ import axios from 'axios';
 const SERVER_URL = process.env.NEXT_PUBLIC_APP_ENDPOINT;
 const DEBOUNCE_SAVE_MS = 600;
 
-export function VoiceSelector({ onVoiceChange }) {
+export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
   const [arrayVoci, setArrayVoci] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [playingVoice, setPlayingVoice] = useState(null);
@@ -81,6 +82,18 @@ export function VoiceSelector({ onVoiceChange }) {
     };
   }, []);
 
+
+  useEffect(() => {
+    if (!voiceFromPreset) {
+      setSelectedVoice(null);
+      return;
+    }
+    if (voiceFromPreset !== selectedVoice) {
+      setSelectedVoice(voiceFromPreset);
+    }
+  }, [voiceFromPreset, selectedVoice]);
+
+
   const saveToDB = useCallback(async (voceOriginale, vocePersonalizzata) => {
     try {
       const res = await databases.current.listDocuments(
@@ -143,7 +156,7 @@ export function VoiceSelector({ onVoiceChange }) {
         if (a) a.pause();
       });
       audio.currentTime = 0;
-      audio.play().catch(() => {});
+      audio.play().catch(() => { });
       setPlayingVoice(voceOriginale);
     }
   }, [playingVoice]);
