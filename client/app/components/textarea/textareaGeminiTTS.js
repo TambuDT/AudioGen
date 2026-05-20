@@ -4,7 +4,7 @@ import { MdCancel } from "react-icons/md";
 import "./textarea.css";
 import AudioPlayer from "../audioplayer/AudioPlayer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faPlus, faX } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}`;
 function TextsectionGemini({ voiceName, onCreate }) {
   const [text, setText] = useState("");
@@ -43,37 +43,38 @@ function TextsectionGemini({ voiceName, onCreate }) {
         modelName: "gemini-2.5-pro-tts",
       },
       audioConfig: {
-        audioEncoding: "MP3",
+        audioEncoding: "LINEAR16",
+        sampleRateHertz: 48000
       },
     };
   }
 
- async function handleSynthesize() {
-  try {
-    setLoading(true);
-    const requestBody = buildRequestBody();
+  async function handleSynthesize() {
+    try {
+      setLoading(true);
+      const requestBody = buildRequestBody();
 
-    const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
+      const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
 
-    if (response.data?.audioContent) {
-      const newAudioSrc = `data:audio/mp3;base64,${response.data.audioContent}`;
+      if (response.data?.audioContent) {
+        const newAudioSrc = `data:audio/wav;base64,${response.data.audioContent}`;
 
-      setAudioSrc(newAudioSrc);
-      onCreate({
-        id: Date.now(),
-        audioSrc: newAudioSrc,
-        model: "Gemini",
-        audioName: "Untitled",
-      });
-    } else {
-      console.error("Risposta senza audioContent:", response.data);
+        setAudioSrc(newAudioSrc);
+        onCreate({
+          id: Date.now(),
+          audioSrc: newAudioSrc,
+          model: "Gemini",
+          audioName: "Untitled",
+        });
+      } else {
+        console.error("Risposta senza audioContent:", response.data);
+      }
+    } catch (err) {
+      console.error("Errore richiesta:", err);
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error("Errore richiesta:", err);
-  } finally {
-    setLoading(false);
   }
-}
 
   function addRow() {
     setCustomPronunce((prev) => [...prev, { parola: "", sostituzione: "" }]);
@@ -154,7 +155,7 @@ function TextsectionGemini({ voiceName, onCreate }) {
         {voiceName ? "Genera" : "Seleziona Una Voce"}
       </button>
 
-      
+
       {
         loading ? (
           <p className='testo-generazione-in-corso'>Generazione in corso...</p>

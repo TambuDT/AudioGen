@@ -75,7 +75,7 @@ function AudioPlayerRecents({ audioSrc, audioModel, audioName }) {
                 value={currentTime}
                 onChange={handleSeek}
             />
-            <a className='custom-audio-player-download' href={audioSrc} download={`${fileName}.mp3`}>
+            <a className='custom-audio-player-download' href={audioSrc} download={`${fileName}.wav`}>
                <FontAwesomeIcon icon={faDownload} />
             </a>
             <label className="custom-audio-player-model-type">{audioModel}</label>

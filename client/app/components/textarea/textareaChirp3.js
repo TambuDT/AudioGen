@@ -29,39 +29,42 @@ function TextsectionChirp3({ voiceName, onPresetLoad, onCreate }) {
     }
 
     return {
-      audioConfig: { audioEncoding: "MP3" },
+      audioConfig: {
+        audioEncoding: "LINEAR16",
+        sampleRateHertz: 48000
+      },
       input: { text: modifiedText },
       voice: { languageCode: "it-IT", name: `it-it-Chirp3-HD-${voiceName}` },
     };
   }
 
 
-async function handleSynthesize() {
-  try {
-    setLoading(true);
-    const requestBody = buildRequestBody();
+  async function handleSynthesize() {
+    try {
+      setLoading(true);
+      const requestBody = buildRequestBody();
 
-    const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
+      const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
 
-    if (response.data?.audioContent) {
-      const newAudioSrc = `data:audio/mp3;base64,${response.data.audioContent}`;
+      if (response.data?.audioContent) {
+        const newAudioSrc =`data:audio/wav;base64,${response.data.audioContent}`;
 
-      setAudioSrc(newAudioSrc);
-      onCreate({
-        id: Date.now(),
-        audioSrc: newAudioSrc,
-        model: "Chirp3",
-        audioName: "Untitled",
-      });
-    } else {
-      console.error("Risposta senza audioContent:", response.data);
+        setAudioSrc(newAudioSrc);
+        onCreate({
+          id: Date.now(),
+          audioSrc: newAudioSrc,
+          model: "Chirp3",
+          audioName: "Untitled",
+        });
+      } else {
+        console.error("Risposta senza audioContent:", response.data);
+      }
+    } catch (err) {
+      console.error("Errore richiesta:", err);
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error("Errore richiesta:", err);
-  } finally {
-    setLoading(false);
   }
-}
 
 
   function addRow() {
