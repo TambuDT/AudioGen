@@ -38,7 +38,7 @@ function TextsectionGemini({ voiceName, onCreate }) {
         prompt: promptStile,
       },
       voice: {
-        languageCode: "en-US",
+        languageCode: "it-IT",
         name: voiceName,
         modelName: "gemini-2.5-pro-tts",
       },
