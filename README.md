@@ -126,7 +126,3 @@ AudioGen/
 ## Note
 
 AudioGen è un progetto in evoluzione. Le funzionalità disponibili e i provider vocali possono cambiare nel tempo in base alle API di Google Cloud e Gemini.
-
-## Licenza
-
-Il progetto non dichiara ancora una licenza. Verifica i termini di utilizzo prima di distribuire o riutilizzare il codice.
