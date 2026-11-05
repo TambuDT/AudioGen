@@ -14,7 +14,7 @@ AudioGen è una web app per trasformare testo in audio, scegliere voci sintetich
 
 ## Demo
 
-![Dashboard AudioGen](assets/dashboard-chirp3.png)
+![Dashboard AudioGen](assets/dashboard.png)
 
 ## Funzionalità
 
