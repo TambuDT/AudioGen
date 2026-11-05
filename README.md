@@ -28,24 +28,6 @@ AudioGen è una web app per trasformare testo in audio, scegliere voci sintetich
 - **Mixer multitraccia**: importa più file, regola i livelli e assembla una composizione.
 - **Conversione audio nel browser**: utilizza FFmpeg per lavorare sui file lato client.
 
-## Screenshots
-
-### Chirp3: preset e selezione voce
-
-![Preset Chirp3 e selezione voci](assets/dashboard-chirp3.png)
-
-### Generazione Text to Speech
-
-![Generazione Text to Speech](assets/text-to-speech.png)
-
-### Gemini TTS: testo e stile
-
-![Gemini TTS](assets/gemini-tts.png)
-
-### Mixer multitraccia
-
-![Mixer audio](assets/mixer.png)
-
 ## Stack tecnologico
 
 - **Frontend**: Next.js, React, Tone.js, FFmpeg.wasm
