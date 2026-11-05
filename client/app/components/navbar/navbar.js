@@ -3,7 +3,11 @@ import "./navbar.css"
 import { LuAudioWaveform } from "react-icons/lu";
 import { account } from '@/app/appwrite/appwrite';
 import { useRouter } from "next/navigation";
-function Navbar({ page }) {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons/faArrowRightFromBracket';
+import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
+import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt';
+function Navbar({ page, onSynthesize, canSynthesize = true }) {
 
   const router = useRouter();
 
@@ -24,21 +28,23 @@ function Navbar({ page }) {
     <nav className="navbar">
       <ul>
         <li className="nav-logo"><LuAudioWaveform className="nav-mini-logo" /><label className='nav-logo-text'>AudioGen</label></li>
-        <ul className="nav-links">
-
-          {/*
-          <li className={`link ${page === "Dashboard" ? "active" : ""}`}>
-            Dashboard
-          </li>
-          <li className={`link ${page === "Create" ? "active" : ""}`}>
-            Create
-          </li>
-          */}
+        <ul className="nav-middle">
         </ul>
-        <li className="logout-conteiner">
-          <button className="logout-button" onClick={logout}>
-            <div className="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
-            <div className="text">Logout</div>
+        <li className="buttons-conteiner">
+          <button
+            type="button"
+            className='sintetizza-button'
+            onClick={onSynthesize}
+            disabled={!canSynthesize}
+            aria-label="Sintetizza audio"
+          >
+            <FontAwesomeIcon icon={faBolt} />
+            <span className="text">Sintetizza</span>
+          </button>
+          <hr className='button-separator'></hr>
+          <button type="button" className="logout-button" onClick={logout}>
+            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            <span className="text">Logout</span>
           </button>
         </li>
       </ul>

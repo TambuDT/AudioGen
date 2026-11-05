@@ -3,12 +3,13 @@ import './saveloadpreset.css';
 import { client } from '@/app/appwrite/appwrite';
 import { Databases, Query, ID } from 'appwrite';
 
-function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setPronunceCustom }) {
+function Saveloadpreset({ currentPage, voiceName, setVoice }) {
   const [searchInput, setSearchInput] = useState('');
   const [presetsList, setPresetsList] = useState([]);
   const [deleteDialog, setDeleteDialog] = useState(null);
   const [confirmInput, setConfirmInput] = useState('');
   const [currentPreset, setCurrentPreset] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const databases = new Databases(client);
   const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
@@ -18,20 +19,14 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
   const handleLoadPreset = async () => {
     try {
       const doc = await databases.listDocuments(databaseId, collectionId, [
-        Query.select(['presetName', 'voice', 'substitutions']),
+        Query.select(['presetName', 'voice']),
       ]);
 
-      // Appwrite restituisce array di stringhe correttamente
-      const parsedPresets = doc.documents.map(preset => ({
-        ...preset,
-        substitutions: Array.isArray(preset.substitutions)
-          ? preset.substitutions
-          : [],
-      }));
-
-      setPresetsList(parsedPresets);
+      setPresetsList(doc.documents);
+      setErrorMessage('');
     } catch (error) {
       console.error('Errore durante il caricamento dei preset:', error);
+      setErrorMessage('Impossibile caricare i preset.');
     }
   };
 
@@ -50,6 +45,7 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
       await handleLoadPreset();
     } catch (error) {
       console.error("Errore durante l'eliminazione del preset:", error);
+      setErrorMessage('Impossibile eliminare il preset.');
     }
   };
 
@@ -61,18 +57,6 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
 
     // Aggiorna la voce
     setVoice(preset.voice);
-
-    // Trasforma array piatto [originale1, sostituta1, originale2, sostituta2, ...]
-    const customPronunceFromPreset = [];
-    for (let i = 0; i < preset.substitutions.length; i += 2) {
-      customPronunceFromPreset.push({
-        parola: preset.substitutions[i],
-        sostituzione: preset.substitutions[i + 1] || "",
-      });
-    }
-
-    // Aggiorna customPronunce
-    setPronunceCustom(customPronunceFromPreset);
   };
 
 
@@ -82,8 +66,6 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
       return;
     }
 
-    const flatSubstitutions = customPronunce.flatMap(item => [item.parola, item.sostituzione]);
-
     try {
       await databases.updateDocument(
         databaseId,
@@ -91,13 +73,14 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
         currentPreset.$id,
         {
           voice: voiceName,
-          substitutions: flatSubstitutions
         }
       );
 
       alert('Modifiche salvate con successo.');
+      setErrorMessage('');
     } catch (error) {
       console.error("Errore durante l'aggiornamento del preset:", error);
+      setErrorMessage('Impossibile aggiornare il preset.');
     }
   };
 
@@ -112,44 +95,25 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
       return;
     }
 
-    //controllo sulle pronunce custom
-    if (customPronunce.length === 0) {
-      if (confirm('Stai creando un preset senza sostituzioni personalizzate, premi OK per continuare o Annulla per tornare indietro.')) {
-        // continua con il salvataggio
-      } else {
-        return;
-      }
-    }
-
     //chiedi nome preset e salva
-    const name = prompt('Inserisci il nome del preset:');
+    const name = prompt('Inserisci il nome del preset:')?.trim();
     if (!name) return;
-
-    // Trasforma l'array di oggetti in array piatto [originale1, sostituta1, originale2, sostituta2, ...]
-    const flatSubstitutions = customPronunce.flatMap(item => [item.parola, item.sostituzione]);
-
-    // Controllo lunghezza di ogni parola
-    if (flatSubstitutions.some(str => str.length > 100)) {
-      alert('Ogni parola deve essere lunga al massimo 100 caratteri');
-      return;
-    }
 
     try {
       await databases.createDocument(databaseId, collectionId, ID.unique(), {
         presetName: name,
         voice: voiceName,
-        substitutions: flatSubstitutions, // <-- salva array piatto
       });
       await handleLoadPreset();
     } catch (error) {
       console.error('Errore durante il salvataggio del preset:', error);
+      setErrorMessage('Impossibile salvare il preset.');
     }
   };
 
   // resetta la voce e le pronunce custom
   const handleClearPreset = () => {
     setVoice(null);            // deseleziona voice nel selettore
-    setPronunceCustom([]);   // svuota sostituzioni
     setCurrentPreset(null);  // rimuove il preset attivo
   };
 
@@ -170,6 +134,7 @@ function Saveloadpreset({ currentPage, voiceName, customPronunce, setVoice, setP
     <div className='saveloadpreset-container'>
       <h1 className='text-section-title'>Preset per {currentPage}</h1>
       <h4 className='text-section-subtitle'>Carica o Elimina un Preset</h4>
+      {errorMessage && <p className='preset-error' role='alert'>{errorMessage}</p>}
       <div className='saveloadpreset-main'>
         <div className='saveloadpreset-search'>
           <input

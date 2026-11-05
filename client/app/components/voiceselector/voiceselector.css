@@ -1,115 +1,352 @@
 .musicpicker-container {
-  width: 400px;
-  height: 700px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-self: flex-start;
-  color: var(--text-color);
-  background-color: var(--background-emelents);
-  border: 1px solid var(--gray-0);
-  margin-left: 10px;
-  padding:0px 15px 20px 15px;
-  border-radius: 15px;
+  user-select: none;
+}
+
+.musicpicker-container > .music-section-title {
+  margin-bottom: 8px;
 }
 
 .music-section-title {
-  padding: 20px;
-  padding-left: 0px;
+  align-self: flex-start;
+  margin-bottom: 5px;
+  color: var(--gray-6);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.music-section-subtitle {
+  margin-bottom: 12px;
+  color: var(--gray-6);
+  font-size: 13px;
+}
+
+.speaker-selector-hint {
+  margin: 0 0 8px;
+  color: var(--gray-6);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.speaker-voice-item {
+  cursor: default;
+}
+
+.speaker-voice-name {
+  color: var(--text-color);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.speaker-assignment-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.speaker-assignment-button {
+  min-height: 29px;
+  padding: 4px 8px;
+  color: var(--gray-6);
+  background: #171719;
+  border: 1px solid var(--panel-border);
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.speaker-assignment-button:hover {
+  border-color: var(--gray-3);
+  color: var(--text-color);
+}
+
+.speaker-assignment-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.speaker-assignment-button:disabled:hover {
+  border-color: var(--panel-border);
+  color: var(--gray-6);
+}
+
+.speaker-assignment-button.assigned {
+  color: #09090b;
+  background: var(--gray-7);
+  border-color: var(--gray-7);
+}
+
+.voice-search-input {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  color: var(--text-color);
+  background-color: #111113;
+  border: 1px solid var(--panel-border);
+  border-radius: 9px;
+  font: inherit;
+  font-size: 13px;
+}
+
+.voice-search-input::placeholder {
+  color: var(--gray-5);
+}
+
+.voice-search-input:focus {
+  outline: none;
+  border-color: var(--gray-4);
+}
+
+.voice-search-empty {
+  margin: 0;
+  padding: 14px;
+  color: var(--gray-6);
+  background-color: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  font-size: 13px;
+  text-align: center;
 }
 
 .music-list-container {
   width: 100%;
-  height: 640px;
-  overflow-y: scroll;
+  max-height: 390px;
+  display: flex;
   flex-direction: column;
+  overflow-y: auto;
   scrollbar-width: none;
-  background-color: var(--background-emelents);
+}
+
+.music-list-container::-webkit-scrollbar {
+  display: none;
 }
 
 .music-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 18px;
-  color: var(--gray-7);
-  border-radius: 10px;
-  background-color: var(--gray-0);
-  margin: 5px;
-  height: 60px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 9px;
+  padding: 10px 11px;
+  margin: 4px 0;
+  color: var(--text-color);
+  background-color: #101012;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .music-item:hover {
-  background-color: var(--gray-2);
-  color: var(--gray-7);
+  background-color: var(--panel-raised);
+  border-color: var(--gray-3);
 }
 
-.music-name {
-  font-size: 17px;
-  font-weight: 600;
-  flex: 1;
-  margin-right: 15px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.music-item.selected {
+  background-color: #151518;
+  border-color: var(--gray-4);
+}
+
+.voce-item-upper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voice-name-input,
+.voice-name-input-selected {
+  width: 100%;
+  color: var(--text-color);
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.voice-name-input:focus,
+.voice-name-input-selected:focus {
+  outline: none;
+}
+
+.voice-name-input::placeholder {
+  color: var(--gray-6);
+}
+
+.voice-name-input-selected::placeholder {
+  color: var(--text-color);
 }
 
 .voice-audio {
   flex-shrink: 0;
-  width: 200px;
   outline: none;
   border-radius: 6px;
 }
 
-.music-item.selected {
-  background-color: var(--gray-7);
-  color: var(--gray-0);
-}
-
-.play-pause-btn {
-  background-color: var(--clr-surface-tonal-a20);
-  color: var(--clr-light-a0);
-  width: 30px;
-  height: 30px;
-  border: none;
-  border-radius: 50px;
+.play-button {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  color: var(--gray-7);
+  background-color: #1b1b1e;
+  border: 1px solid #303034;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.play-button:hover {
+  background-color: #252529;
+}
+
+.play-pause-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-7);
+  background-color: var(--panel-raised);
+  border: 1px solid var(--panel-border);
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .play-pause-btn * {
-  font-size: 12px;
+  font-size: 13px;
 }
 
-.music-section-subtitle {
-  margin-bottom: 20px;
+.voice-divider {
+  width: 100%;
+  height: 1px;
+  border: none;
+  background-color: var(--panel-border);
+}
+
+.voice-item-middle-upper {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.attributi-voce {
+  color: var(--gray-6);
+  font-size: 11px;
+}
+
+.voice-item-right-upper {
+  min-width: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
   color: var(--gray-6);
 }
 
+.outer-selection-circle,
+.outer-selection-circle-selected {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--gray-3);
+  border-radius: 50%;
+}
 
-.voice-name-input{
-  background: transparent;
-  border: none;
-  color: var(--gray-7);
-  font-size: 17px;
-  font-weight: 600;
-  width: 100%;
+.outer-selection-circle-selected {
+  border-color: var(--gray-7);
 }
-.voice-name-input-selected{
-  background: transparent;
-  border: none;
-  color: var(--gray-0);
-  font-size: 17px;
-  font-weight: 600;
-  width: 100%;
+
+.inner-selection-circle-selected {
+  width: 8px;
+  height: 8px;
+  background-color: var(--gray-7);
+  border-radius: 50%;
 }
-.voice-name-input:focus, .voice-name-input-selected:focus {
+
+.open-close-voice-info {
+  width: 22px;
+  height: 24px;
+  min-width: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--gray-6);
+  background: transparent;
+  border: 0;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.open-close-voice-info:hover {
+  color: var(--text-color);
+}
+
+.voice-description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 3px;
+}
+
+.voice-description > span {
+  color: var(--gray-6);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.voice-description textarea {
+  width: 100%;
+  min-height: 84px;
+  resize: vertical;
+  padding: 10px;
+  color: var(--light-text-color);
+  background-color: #111113;
+  border: 1px solid var(--panel-border);
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.voice-description textarea::placeholder {
+  color: var(--gray-5);
+}
+
+.voice-description textarea:focus {
   outline: none;
-}
-.voice-name-input::placeholder {
-  color: var(--gray-7);
+  border-color: var(--gray-4);
 }
 
-.voice-name-input-selected::placeholder {
-  color: var(--gray-0);
+.loading-message,
+.error-message {
+  padding: 14px;
+  color: var(--gray-6);
+  background-color: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.error-message {
+  color: #ffb4b4;
+  border-color: #603333;
 }

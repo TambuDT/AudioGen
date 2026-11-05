@@ -1,69 +1,73 @@
 .login-container {
-    border-radius: 16px;
-    padding: 40px 35px;
-    width: 380px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+  width: min(390px, calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 14vh auto;
+  padding: 32px;
+  color: var(--text-color);
+  background-color: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
 }
 
 .logo-text {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-    color: var(--text-color);
+  margin-bottom: 2px;
+  color: var(--text-color);
+  font-size: 25px;
+  font-weight: 700;
 }
 
 .login-text {
-    font-size: 0.95rem;
-    font-weight: 400;
-    color: var(--text-color);
-    margin-bottom: 15px;
+  margin-bottom: 10px;
+  color: var(--gray-6);
+  font-size: 14px;
 }
 
 .input-field {
-    border: none;
-    border-bottom: 1px solid var(--gray-1);
-    background-color: transparent;
-    padding: 12px;
-    font-size: 0.95rem;
-    color: var(--clr-light-a0);
-    outline: none;
-    transition: all 0.25s ease;
+  width: 100%;
+  padding: 12px;
+  color: var(--light-text-color);
+  background-color: #121214;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  font-size: 15px;
+  transition: border-color 0.15s ease;
 }
 
 .input-field::placeholder {
-    color: var(--clr-surface-a50);
+  color: var(--gray-5);
 }
 
 .input-field:focus {
-    border: none;
-    border-bottom: 1px solid var(--gray-1);
+  outline: none;
+  border-color: var(--gray-4);
 }
 
 .button {
-    background-color: var(--gray-1);
-    border: 1px solid var(--gray-1);
-    color: var(--text-color);
-    border-radius: 10px;
-    padding: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  width: 100%;
+  padding: 12px;
+  color: #09090b;
+  background-color: var(--gray-7);
+  border: 1px solid var(--gray-7);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 }
 
 .button:hover {
-    background-color: var(--background);
-    border: 1px solid var(--gray-1);
+  background-color: #fff;
 }
 
 .footer-text {
-    font-size: 0.85rem;
-    text-align: center;
-    color: var(--gray-5);
+  margin-top: 6px;
+  color: var(--gray-5);
+  font-size: 13px;
+  text-align: center;
 }
 
 .t2s-mini-logo {
-    color: var(--text-color);
+  color: var(--text-color);
 }

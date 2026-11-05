@@ -81,8 +81,15 @@ app.post("/listvoices", async (req, res) => {
 app.post("/synthesize", async (req, res) => {
     try {
         const request = req.body;
-        if (!request?.input?.text) {
-            return res.status(400).json({ error: "Campo 'input.text' mancante" });
+        const hasText = typeof request?.input?.text === "string" && request.input.text.trim().length > 0;
+        const hasMultiSpeakerTurns =
+            Array.isArray(request?.input?.multiSpeakerMarkup?.turns) &&
+            request.input.multiSpeakerMarkup.turns.length > 0;
+
+        if (!hasText && !hasMultiSpeakerTurns) {
+            return res.status(400).json({
+                error: "Fornire input.text oppure input.multiSpeakerMarkup.turns.",
+            });
         }
 
         const [response] = await client.synthesizeSpeech(request);
@@ -92,7 +99,10 @@ app.post("/synthesize", async (req, res) => {
         });
     } catch (err) {
         console.error("Errore TTS:", err);
-        res.status(500).json({ error: "Errore durante la sintesi vocale" });
+        const statusCode = err.code === 3 ? 400 : 500;
+        res.status(statusCode).json({
+            error: err.details || err.message || "Errore durante la sintesi vocale",
+        });
     }
 });
 

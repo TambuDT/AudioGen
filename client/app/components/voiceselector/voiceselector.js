@@ -5,21 +5,51 @@ import { FaPause, FaPlay } from 'react-icons/fa';
 import { client } from '../../appwrite/appwrite';
 import { Databases, Query, ID } from 'appwrite';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrophone } from '@fortawesome/free-solid-svg-icons/faMicrophone';
+import { faPause } from '@fortawesome/free-solid-svg-icons/faPause';
+import { faAngleUp } from '@fortawesome/free-solid-svg-icons/faAngleUp';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons/faAngleDown';
+import { GEMINI_TTS_VOICES } from './geminiTtsVoices';
 
 const SERVER_URL = process.env.NEXT_PUBLIC_APP_ENDPOINT;
 const DEBOUNCE_SAVE_MS = 600;
 
-export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
+export function VoiceSelector({
+  onVoiceChange,
+  voiceFromPreset,
+  speakerMode = 'single',
+  speakerVoices = {},
+  onSpeakerVoiceChange,
+}) {
   const [arrayVoci, setArrayVoci] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [playingVoice, setPlayingVoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [saveError, setSaveError] = useState('');
+  const [open, setOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('');
 
   const audioRefs = useRef({});
   const databases = useRef(new Databases(client));
   const saveTimers = useRef({});
   const loadAbortRef = useRef(null);
+  const isMultiSpeaker = speakerMode === 'multi';
+  const visibleVoices = isMultiSpeaker
+    ? GEMINI_TTS_VOICES.map(voceOriginale => ({
+      voceOriginale,
+      vocePersonalizzata: '',
+      descrizione_voce: '',
+    }))
+    : arrayVoci;
+  const normalizedSearchTerm = searchTerm.trim().toLocaleLowerCase('it');
+  const filteredVoices = normalizedSearchTerm
+    ? visibleVoices.filter(voce =>
+      [voce.voceOriginale, voce.vocePersonalizzata, voce.descrizione_voce]
+        .some(value => value?.toLocaleLowerCase('it').includes(normalizedSearchTerm))
+    )
+    : visibleVoices;
 
   useEffect(() => {
     let cancelled = false;
@@ -44,12 +74,16 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
         const vociBackend = resBackend.data.voci;
         const customMap = {};
         resDB.documents.forEach(doc => {
-          customMap[doc.voceOriginale] = doc.vocePersonalizzata;
+          customMap[doc.voceOriginale] = {
+            vocePersonalizzata: doc.vocePersonalizzata || '',
+            descrizione_voce: doc.descrizione_voce || '',
+          };
         });
 
         const merged = vociBackend.map(nome => ({
           voceOriginale: nome,
-          vocePersonalizzata: customMap[nome] || ''
+          vocePersonalizzata: customMap[nome]?.vocePersonalizzata || '',
+          descrizione_voce: customMap[nome]?.descrizione_voce || '',
         }));
 
         setArrayVoci(merged);
@@ -94,7 +128,7 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
   }, [voiceFromPreset, selectedVoice]);
 
 
-  const saveToDB = useCallback(async (voceOriginale, vocePersonalizzata) => {
+  const saveToDB = useCallback(async (voceOriginale, vocePersonalizzata, descrizione_voce) => {
     try {
       const res = await databases.current.listDocuments(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
@@ -107,42 +141,53 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
           process.env.NEXT_PUBLIC_VOCI_COLLECTION_ID,
           res.documents[0].$id,
-          { vocePersonalizzata }
+          { vocePersonalizzata, descrizione_voce }
         );
       } else {
         await databases.current.createDocument(
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
           process.env.NEXT_PUBLIC_VOCI_COLLECTION_ID,
           ID.unique(),
-          { voceOriginale, vocePersonalizzata }
+          { voceOriginale, vocePersonalizzata, descrizione_voce }
         );
       }
+      setSaveError('');
     } catch (err) {
       console.error('Errore salvataggio DB:', err);
+      setSaveError('Impossibile salvare le modifiche alla voce.');
     }
   }, []);
 
   const handleSelect = useCallback((voceOriginale) => {
-    setSelectedVoice(voceOriginale);
-    onVoiceChange?.(voceOriginale);
-  }, [onVoiceChange]);
+    const nextVoice = selectedVoice === voceOriginale ? null : voceOriginale;
+    setSelectedVoice(nextVoice);
+    setOpen(Boolean(nextVoice));
+    onVoiceChange?.(nextVoice);
+  }, [onVoiceChange, selectedVoice]);
 
-  const handleChange = useCallback((voceOriginale, newValue) => {
+  const handleChange = useCallback((voceOriginale, field, newValue) => {
+    const currentVoice = arrayVoci.find(voice => voice.voceOriginale === voceOriginale);
+    if (!currentVoice) return;
+    const updatedVoice = { ...currentVoice, [field]: newValue };
+
     setArrayVoci(prev =>
-      prev.map(v =>
-        v.voceOriginale === voceOriginale
-          ? { ...v, vocePersonalizzata: newValue }
-          : v
-      )
+      prev.map(voice => {
+        if (voice.voceOriginale !== voceOriginale) return voice;
+        return updatedVoice;
+      })
     );
 
     if (saveTimers.current[voceOriginale]) {
       clearTimeout(saveTimers.current[voceOriginale]);
     }
     saveTimers.current[voceOriginale] = setTimeout(() => {
-      saveToDB(voceOriginale, newValue);
+      saveToDB(
+        voceOriginale,
+        updatedVoice.vocePersonalizzata,
+        updatedVoice.descrizione_voce
+      );
     }, DEBOUNCE_SAVE_MS);
-  }, [saveToDB]);
+  }, [arrayVoci, saveToDB]);
 
   const handlePlayPause = useCallback((voceOriginale) => {
     const audio = audioRefs.current[voceOriginale];
@@ -165,7 +210,7 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
     setPlayingVoice(prev => prev === voceOriginale ? null : prev);
   }, []);
 
-  if (loading) {
+  if (loading && !isMultiSpeaker) {
     return (
       <div className='musicpicker-container'>
         <h1 className='music-section-title'>Selezione voci</h1>
@@ -174,7 +219,7 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
     );
   }
 
-  if (error) {
+  if (error && !isMultiSpeaker) {
     return (
       <div className='musicpicker-container'>
         <h1 className='music-section-title'>Selezione voci</h1>
@@ -183,20 +228,52 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
     );
   }
 
+
+  function changeSetOpen(event, voceOriginale) {
+    event.stopPropagation();
+    if (selectedVoice !== voceOriginale) {
+      handleSelect(voceOriginale);
+      setOpen(true);
+      return;
+    }
+    setOpen(prev => !prev);
+  }
+
+
   return (
     <div className='musicpicker-container'>
-      <h1 className='music-section-title'>Selezione voci</h1>
+      <h1 className='music-section-title'>{isMultiSpeaker ? 'Voci per speaker' : 'Selezione voci'}</h1>
+      {isMultiSpeaker ? (
+        <p className="speaker-selector-hint">Assegna una voce a ciascuno speaker.</p>
+      ) : (
+        saveError && <p className="error-message" role="alert">{saveError}</p>
+      )}
 
-      <div className='music-list-container' role="listbox" aria-label="Elenco voci">
-        {arrayVoci.map((voce) => (
+      <input
+        type="search"
+        className="voice-search-input"
+        value={searchTerm}
+        onChange={(event) => setSearchTerm(event.target.value)}
+        placeholder="Cerca per nome o descrizione..."
+        aria-label="Cerca voci per nome o descrizione"
+      />
+
+      {filteredVoices.length > 0 ? (
+        <div className='music-list-container' role={isMultiSpeaker ? 'list' : 'listbox'} aria-label={isMultiSpeaker ? 'Voci Gemini per speaker' : 'Elenco voci'}>
+        {filteredVoices.map((voce) => {
+          const assignedSpeaker = isMultiSpeaker
+            ? Object.entries(speakerVoices).find(([, voiceName]) => voiceName === voce.voceOriginale)?.[0]
+            : null;
+
+          return (
           <div
             key={voce.voceOriginale}
-            className={`music-item ${selectedVoice === voce.voceOriginale ? 'selected' : ''}`}
-            onClick={() => handleSelect(voce.voceOriginale)}
-            role="option"
-            aria-selected={selectedVoice === voce.voceOriginale}
-            tabIndex={0}
-            onKeyDown={(e) => {
+            className={`music-item ${isMultiSpeaker ? (assignedSpeaker ? 'selected' : '') : (selectedVoice === voce.voceOriginale ? 'selected' : '')} ${isMultiSpeaker ? 'speaker-voice-item' : ''}`}
+            onClick={isMultiSpeaker ? undefined : () => handleSelect(voce.voceOriginale)}
+            role={isMultiSpeaker ? 'listitem' : 'option'}
+            aria-selected={isMultiSpeaker ? undefined : selectedVoice === voce.voceOriginale}
+            tabIndex={isMultiSpeaker ? undefined : 0}
+            onKeyDown={isMultiSpeaker ? undefined : (e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 // Evita di attivare la selezione se il focus è sull'input o sul pulsante play
                 if (e.target.tagName === 'INPUT' || e.target.getAttribute('role') === 'button') {
@@ -207,49 +284,130 @@ export function VoiceSelector({ onVoiceChange, voiceFromPreset }) {
               }
             }}
           >
-            <input
-              className={selectedVoice === voce.voceOriginale ? 'voice-name-input-selected' : 'voice-name-input'}
-              value={voce.vocePersonalizzata}
-              placeholder={voce.voceOriginale}
-              aria-label={`Nome personalizzato per ${voce.voceOriginale}`}
-              onKeyDown={(e) => {
-                // Lascia passare lo spazio senza propagazione
-                if (e.key === ' ') {
-                  e.stopPropagation();
-                }
-              }}
-              onChange={(e) => handleChange(voce.voceOriginale, e.target.value)}
-            />
+            <div className="voce-item-upper">
 
-            <audio
-              ref={(el) => (audioRefs.current[voce.voceOriginale] = el)}
-              src={`${SERVER_URL}/vociCampionario/${voce.voceOriginale}.mp3`}
-              onEnded={() => handleAudioEnded(voce.voceOriginale)}
-              preload="none"
-            />
 
-            <div
-              role="button"
-              tabIndex={0}
-              aria-label={playingVoice === voce.voceOriginale ? 'Pausa anteprima' : 'Riproduci anteprima'}
-              onClick={(e) => {
-                e.stopPropagation();
-                handlePlayPause(voce.voceOriginale);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handlePlayPause(voce.voceOriginale);
-                }
-              }}
-              className="play-button"
-            >
-              {playingVoice === voce.voceOriginale ? <FaPause /> : <FaPlay />}
+              {!isMultiSpeaker && (
+                <>
+                  <audio
+                    ref={(el) => (audioRefs.current[voce.voceOriginale] = el)}
+                    src={`${SERVER_URL}/vociCampionario/${voce.voceOriginale}.mp3`}
+                    onEnded={() => handleAudioEnded(voce.voceOriginale)}
+                    preload="none"
+                  />
+
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-label={playingVoice === voce.voceOriginale ? 'Pausa anteprima' : 'Riproduci anteprima'}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlayPause(voce.voceOriginale);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handlePlayPause(voce.voceOriginale);
+                      }
+                    }}
+                    className="play-button"
+                  >
+                    {playingVoice === voce.voceOriginale ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faMicrophone} />}
+                  </div>
+                </>
+              )}
+
+              <div className='voice-item-middle-upper'>
+                {isMultiSpeaker ? (
+                  <>
+                    <span className="speaker-voice-name">{voce.voceOriginale}</span>
+                    <label className='attributi-voce'>Voce Gemini · Italiano</label>
+                  </>
+                ) : (
+                  <>
+                    <input
+                      className={selectedVoice === voce.voceOriginale ? 'voice-name-input-selected' : 'voice-name-input'}
+                      value={voce.vocePersonalizzata}
+                      placeholder={voce.voceOriginale}
+                      aria-label={`Nome personalizzato per ${voce.voceOriginale}`}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      onChange={(e) => handleChange(voce.voceOriginale, 'vocePersonalizzata', e.target.value)}
+                    />
+                    <label className='attributi-voce'>Voce campione · Italiano</label>
+                  </>
+                )}
+              </div>
+
+
+              {!isMultiSpeaker && <div className='voice-item-right-upper'>
+                <div className={selectedVoice === voce.voceOriginale ? 'outer-selection-circle-selected' : 'outer-selection-circle'}>
+                  <div className={selectedVoice === voce.voceOriginale ? 'inner-selection-circle-selected' : 'inner-selection-circle'} ></div>
+                </div>
+
+                <button
+                  type="button"
+                  className='open-close-voice-info'
+                  aria-label={selectedVoice === voce.voceOriginale && open ? 'Nascondi dettagli voce' : 'Mostra dettagli voce'}
+                  aria-expanded={selectedVoice === voce.voceOriginale && open}
+                  onClick={(event) => changeSetOpen(event, voce.voceOriginale)}
+                >
+                  {selectedVoice === voce.voceOriginale && open ? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
+                </button>
+              </div>}
+
+
             </div>
+            {isMultiSpeaker && (
+              <div className="speaker-assignment-buttons" role="group" aria-label={`Assegna ${voce.voceOriginale}`}>
+                {["speaker_1", "speaker_2"].map((speakerId, index) => (
+                  <button
+                    type="button"
+                    key={speakerId}
+                    className={`speaker-assignment-button ${speakerVoices[speakerId] === voce.voceOriginale ? 'assigned' : ''}`}
+                    disabled={
+                      speakerVoices[speakerId === "speaker_1" ? "speaker_2" : "speaker_1"] === voce.voceOriginale &&
+                      speakerVoices[speakerId] !== voce.voceOriginale
+                    }
+                    aria-pressed={speakerVoices[speakerId] === voce.voceOriginale}
+                    onClick={() => onSpeakerVoiceChange?.(speakerId, voce.voceOriginale)}
+                  >
+                    Speaker {index + 1}
+                  </button>
+                ))}
+              </div>
+            )}
+            {!isMultiSpeaker && (
+              selectedVoice === voce.voceOriginale && open == true ?
+                <>
+                  <hr className='voice-divider'></hr>
+                  <div className="voice-description">
+                    <span>Descrizione della voce</span>
+                    <textarea
+                      value={voce.descrizione_voce}
+                      placeholder="Aggiungi una descrizione per questa voce..."
+                      aria-label={`Descrizione della voce ${voce.voceOriginale}`}
+                      onClick={(event) => event.stopPropagation()}
+                      onKeyDown={(event) => event.stopPropagation()}
+                      onChange={(event) => handleChange(
+                        voce.voceOriginale,
+                        'descrizione_voce',
+                        event.target.value
+                      )}
+                    />
+                  </div>
+                  </>
+                :
+                null
+            )}
+
           </div>
-        ))}
-      </div>
+          );
+        })}
+        </div>
+      ) : (
+        <p className="voice-search-empty" role="status">Nessuna voce trovata.</p>
+      )}
     </div>
   );
 }

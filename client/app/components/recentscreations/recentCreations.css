@@ -1,24 +1,92 @@
-.recentcreations-container{
-  width: 400px;
-  height: 520px;
+.recentcreations-container {
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-self: flex-start;
+  margin-top: 18px;
   color: var(--text-color);
-  background-color: var(--background-emelents);
-  border: 1px solid var(--gray-0);
-  margin-left: 10px;
-  padding:0px 15px 20px 15px;
-  border-radius: 15px;
-  margin-top: 10px;
+  user-select: none;
 }
-.recents-creations-container{
+
+.recentcreations-container .music-section-title {
+  margin: 0 0 8px;
+}
+
+.recents-creations-container {
   width: 100%;
-  max-height: 640px;
-  overflow-y: scroll;
+  max-height: 270px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  overflow-y: auto;
   scrollbar-width: none;
-  background-color: var(--background-emelents);
+}
+
+.recents-creations-container::-webkit-scrollbar {
+  display: none;
+}
+
+.recents-creations-container .custom-audio-player-container {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 8px 10px;
+  margin: 3px 0;
+  color: var(--text-color);
+  background-color: #101012;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.recents-creations-container .custom-audio-player-container:hover {
+  background-color: var(--panel-raised);
+  border-color: var(--gray-3);
+}
+
+.recents-creations-container .custom-audio-player-title-container {
+  width: 100%;
+  margin: 0;
+  padding: 0 0 4px;
+}
+
+.recents-creations-container .custom-audio-player-title {
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.recents-creations-container .custom-audio-player-controls {
+  justify-content: flex-start;
+  gap: 7px;
+}
+
+.recents-creations-container .custom-audio-player-play-pause,
+.recents-creations-container .custom-audio-player-download {
+  width: 30px;
+  height: 30px;
+  flex-basis: 30px;
+  color: var(--gray-7);
+  background-color: #1b1b1e;
+  border: 1px solid #303034;
+  border-radius: 8px;
+}
+
+.recents-creations-container .custom-audio-player-seek {
+  margin: 0;
+}
+
+.recents-creations-container .custom-audio-player-model-type {
+  padding: 4px 6px;
+  font-size: 10px;
+}
+
+.recent-creations-empty {
+  margin: 3px 0;
+  padding: 12px;
+  color: var(--gray-6);
+  background-color: #101012;
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  font-size: 13px;
 }

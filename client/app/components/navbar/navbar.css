@@ -1,145 +1,121 @@
 .navbar {
-  background-color: var(--background-emelents);
-  backdrop-filter: blur(10px);
   position: fixed;
-  margin: 0;
-  border: 0;
-  padding: 0;
-  top: 0;
-  height: var(--navbar-height);
-  width: 100%;
-  display: flex;
+  inset: 0 0 auto;
   z-index: 100;
-  justify-content: center;
+  height: var(--navbar-height);
+  display: flex;
   align-items: center;
-  flex-direction: column;
+  justify-content: center;
+  background-color: #09090bf2;
+  border-bottom: 1px solid var(--panel-border);
+  backdrop-filter: blur(18px);
 }
 
-.navbar ul {
+.navbar > ul {
+  width: min(1440px, calc(100% - 48px));
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  width: 100%;
+  justify-content: space-between;
+  padding: 0;
+  list-style: none;
 }
 
 .navbar ul li {
-  margin: 20px;
   list-style: none;
 }
 
 .nav-logo {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
-  width: 200px;
-  font-size: 25px;
   color: var(--text-color);
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .nav-mini-logo {
-  margin-left: 10px;
-  background-color: var(--gray-7);
-  color: var(--gray-0);
-  border-radius: 100px;
-  padding: 5px;
-  font-size: 40px;
+  width: 30px;
+  height: 30px;
   margin-right: 10px;
+  padding: 6px;
+  color: var(--gray-7);
+  background-color: var(--panel-raised);
+  border: 1px solid var(--panel-border);
+  border-radius: 9px;
 }
 
 .nav-logo-text {
-  color: var(--clr-light-a0);
-}
-
-.logout-conteiner {
-  width: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-
-.logout-button {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 35px;
-  height: 35px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition-duration: .3s;
-  background-color: var(--gray-7);
-  color: var(--gray-0);
-}
-
-.sign {
-  width: 100%;
-  transition-duration: .3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sign svg {
-  width: 15px;
-}
-
-.sign svg path {
-  fill: var(--gray-0);
-}
-
-.text {
-  position: absolute;
-  right: 0%;
-  width: 0%;
-  opacity: 0;
-  font-size: 1.1em;
-  font-weight: 600;
-  transition-duration: .3s;
-}
-
-.logout-button:hover {
-  width: 125px;
-  border-radius: 40px;
-  transition-duration: .3s;
-}
-
-.logout-button:hover .sign {
-  width: 30%;
-  transition-duration: .3s;
-  padding-left: 20px;
-}
-
-.logout-button:hover .text {
-  opacity: 1;
-  width: 70%;
-  transition-duration: .3s;
-  padding-right: 10px;
-}
-
-.logout-button:active {
-  transform: translate(2px, 2px);
-}
-
-.link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  cursor: pointer;
-  font-size: 18px;
-  color: var(--gray-5);
-}
-
-.link.active {
   color: var(--text-color);
 }
 
-.link:hover {
-  color: var(--gray-7);
-  transition-duration: 0.3s;
+.buttons-conteiner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout-button,
+.sintetizza-button {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 15px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.logout-button {
+  min-width: 90px;
+  color: var(--gray-6);
+  background-color: var(--panel);
+  border: 1px solid var(--panel-border);
+}
+
+.logout-button:hover {
+  color: var(--text-color);
+  border-color: var(--gray-3);
+}
+
+.sintetizza-button {
+  min-width: 98px;
+  color: #09090b;
+  background-color: var(--gray-7);
+  border: 1px solid var(--gray-7);
+  font-family: inherit;
+}
+
+.sintetizza-button:hover:not(:disabled) {
+  background-color: #fff;
+}
+
+.sintetizza-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.button-separator {
+  width: 1px;
+  height: 22px;
+  border: 0;
+  background-color: var(--panel-border);
+}
+
+@media (max-width: 520px) {
+  .navbar > ul {
+    width: calc(100% - 24px);
+  }
+
+  .nav-logo-text {
+    display: none;
+  }
+
+  .sintetizza-button,
+  .logout-button {
+    min-width: 0;
+    padding: 0 11px;
+  }
 }

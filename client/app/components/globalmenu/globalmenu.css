@@ -1,39 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Stack+Sans+Headline:wght@200..700&display=swap');
-
 .globalmenu-container {
-    position: relative;
-    margin-top: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    color: var(--light-text-color);
-    font-family: "Stack Sans Headline", sans-serif;
-    font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  color: var(--light-text-color);
+  font-size: 14px;
+}
+
+.globalmenu-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.globalmenu-engine {
+  color: var(--gray-6);
+  font-size: 11px;
 }
 
 .globalmenu {
-    width: 400px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  margin: 8px 0 16px;
+  background-color: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
 }
 
-.globalmenu label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 150px;
-    height: 30px;
-    border-bottom: 2px solid transparent;
+.globalmenu button {
+  min-width: 0;
+  height: 32px;
+  flex: 1;
+  color: var(--gray-6);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
-.globalmenu label.selected {
-    border-bottom: 2px solid var(--light-text-color);
+.globalmenu button:hover:not(.selected) {
+  color: var(--text-color);
+  background: var(--panel-raised);
 }
 
-.globalmenu-title {
-    margin-bottom: 20px;
+.globalmenu button.selected {
+  color: #09090b;
+  background-color: var(--gray-7);
+}
+
+.modello-label {
+  align-self: flex-start;
+  color: var(--gray-6);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }

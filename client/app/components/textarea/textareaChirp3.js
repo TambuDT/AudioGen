@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './textarea.css';
 import axios from 'axios';
-import Saveloadpreset from '../saveloadpreset/Saveloadpreset';
 import AudioPlayer from '../audioplayer/AudioPlayer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 const SERVER_URL = `${process.env.NEXT_PUBLIC_APP_ENDPOINT}`;
 
-function TextsectionChirp3({ voiceName, onPresetLoad, onCreate }) {
+function TextsectionChirp3({ voiceName, onCreate, synthesisRequest }) {
   const [text, setText] = useState('');
   const [audioSrc, setAudioSrc] = useState(null);
   const [customPronunce, setCustomPronunce] = useState([]);
   const [loading, setLoading] = useState(false);
-  const currentPage = "Chirp3";
+  const lastSynthesisRequest = useRef(synthesisRequest);
 
-  function buildRequestBody() {
+  const buildRequestBody = useCallback(() => {
     let modifiedText = text;
     const matches = text.match(/\{(.*?)\}/g);
     if (matches) {
@@ -36,10 +35,12 @@ function TextsectionChirp3({ voiceName, onPresetLoad, onCreate }) {
       input: { text: modifiedText },
       voice: { languageCode: "it-IT", name: `it-it-Chirp3-HD-${voiceName}` },
     };
-  }
+  }, [customPronunce, text, voiceName]);
 
 
-  async function handleSynthesize() {
+  const handleSynthesize = useCallback(async () => {
+    if (!voiceName || loading) return;
+
     try {
       setLoading(true);
       const requestBody = buildRequestBody();
@@ -64,7 +65,13 @@ function TextsectionChirp3({ voiceName, onPresetLoad, onCreate }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [buildRequestBody, loading, onCreate, voiceName]);
+
+  useEffect(() => {
+    if (synthesisRequest === lastSynthesisRequest.current) return;
+    lastSynthesisRequest.current = synthesisRequest;
+    handleSynthesize();
+  }, [handleSynthesize, synthesisRequest]);
 
 
   function addRow() {
@@ -85,73 +92,61 @@ function TextsectionChirp3({ voiceName, onPresetLoad, onCreate }) {
 
   return (
     <div className='textsection-container'>
+      <section className="tts-panel">
+        <h1 className="text-section-title">Inserimento del testo</h1>
+        <h4 className="text-section-subtitle">Inserisci il testo da convertire in audio</h4>
+        <textarea
+          value={text}
+          onChange={e => setText(e.target.value)}
+          className="text-area"
+          placeholder="Inserisci il testo qui..."
+        />
+      </section>
 
-
-      <Saveloadpreset
-        currentPage={currentPage}
-        voiceName={voiceName}
-        customPronunce={customPronunce}
-        setVoice={onPresetLoad}
-        setPronunceCustom={setCustomPronunce}
-      />
-
-
-
-      <h1 className='text-section-title'>Text to Speech</h1>
-      <h4 className='text-section-subtitle'>Inserisci il testo da convertire in audio</h4>
-
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        className='text-area'
-        placeholder='Inserisci il testo qui...'
-      />
-
-      <div className='add-pronuncia-custom-title-container'>
-        <h4 className='text-section-subtitle'>
+      <section className="tts-panel pronunciation-panel">
+        <div className="add-pronuncia-custom-title-container">
+          <h2 className="text-section-title">Pronunce personalizzate</h2>
+          <button type="button" className="add-pronuncia-button" onClick={addRow} aria-label="Aggiungi pronuncia personalizzata">
+            <span aria-hidden="true">+</span>
+          </button>
+        </div>
+        <h4 className="text-section-subtitle">
           Aggiungi parole da sostituire con pronunce personalizzate
         </h4>
-        <div className='add-pronuncia-button' onClick={addRow}><p>+</p></div>
-      </div>
-
-      <div className='parole-custom-container'>
-        {customPronunce.map((item, idx) => (
-          <div key={idx} className='custom-pronuncia-row'>
-            <input
-              value={item.parola}
-              onChange={e => updatePronunce(idx, 'parola', e.target.value)}
-              placeholder='Parola originale'
-              className='custom-pronuncia-input'
-            />
-            <input
-              value={item.sostituzione}
-              onChange={e => updatePronunce(idx, 'sostituzione', e.target.value)}
-              placeholder='Pronuncia'
-              className='custom-pronuncia-input'
-            />
-            <div className='remove-pronuncia-button' onClick={() => removeRow(idx)}>
-              <FontAwesomeIcon icon={faX} />
+        <div className="parole-custom-container">
+          {customPronunce.map((item, idx) => (
+            <div key={idx} className="custom-pronuncia-row">
+              <input
+                value={item.parola}
+                onChange={e => updatePronunce(idx, 'parola', e.target.value)}
+                placeholder="Parola originale"
+                className="custom-pronuncia-input"
+              />
+              <input
+                value={item.sostituzione}
+                onChange={e => updatePronunce(idx, 'sostituzione', e.target.value)}
+                placeholder="Pronuncia"
+                className="custom-pronuncia-input"
+              />
+              <button type="button" className="remove-pronuncia-button" onClick={() => removeRow(idx)} aria-label={`Rimuovi pronuncia ${idx + 1}`}>
+                <FontAwesomeIcon icon={faX} />
+              </button>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+          {customPronunce.length === 0 && (
+            <p className="pronunciation-empty">Nessuna pronuncia personalizzata</p>
+          )}
+        </div>
+      </section>
 
-      <button
-        className={voiceName ? "genera-button" : "genera-button-non-disponibile"}
-        onClick={handleSynthesize}
-      >
-        {voiceName ? "Genera " : "Seleziona Una Voce"}
-      </button>
-
-      {
-        loading ? (
-          <p className='testo-generazione-in-corso'>Generazione in corso...</p>
+      <section className="tts-panel output-panel">
+        <h2 className="text-section-title">Audio generato</h2>
+        {loading ? (
+          <p className="testo-generazione-in-corso">Generazione in corso...</p>
         ) : (
-          <>
-            <AudioPlayer audioSrc={audioSrc}></AudioPlayer>
-          </>
-        )
-      }
+          <AudioPlayer audioSrc={audioSrc}></AudioPlayer>
+        )}
+      </section>
 
     </div>
   );

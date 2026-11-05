@@ -4,7 +4,7 @@ import { faPlay, faPause, faDownload } from '@fortawesome/free-solid-svg-icons';
 import React, { useRef, useState, useEffect } from "react";
 import './audioPlayer.css';
 
-function AudioPlayer({ audioSrc }) {
+function AudioPlayer({ audioSrc, showDownload = true }) {
     const audioRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
@@ -53,6 +53,29 @@ function AudioPlayer({ audioSrc }) {
         setCurrentTime(newTime);
     };
 
+    const formatTime = (time) => {
+        if (!Number.isFinite(time)) return "00:00";
+        const minutes = Math.floor(time / 60).toString().padStart(2, "0");
+        const seconds = Math.floor(time % 60).toString().padStart(2, "0");
+        return `${minutes}:${seconds}`;
+    };
+
+    if (!audioSrc) {
+        return (
+            <div className="custom-audio-player-placeholder" role="status">
+                <span className="audio-placeholder-play" aria-hidden="true">
+                    <FontAwesomeIcon icon={faPlay} />
+                </span>
+                <span className="audio-placeholder-waveform" aria-hidden="true">
+                    {[12, 20, 28, 16, 24, 32, 18, 26, 14, 22, 30, 16, 24, 12, 20, 28, 16, 24, 12].map((height, index) => (
+                        <span key={index} style={{ height }} />
+                    ))}
+                </span>
+                <span className="audio-placeholder-label">L’audio generato apparirà qui</span>
+            </div>
+        );
+    }
+
     return (
         <div className="custom-audio-player-container">
             <div className="custom-audio-player-controls">
@@ -60,6 +83,7 @@ function AudioPlayer({ audioSrc }) {
             <button className="custom-audio-player-play-pause" onClick={handlePlayPause}>
                 {isPlaying ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faPlay} />}
             </button>
+            <span className="custom-audio-player-time">{formatTime(currentTime)}</span>
             <input
                 className='custom-audio-player-seek'
                 type="range"
@@ -69,9 +93,12 @@ function AudioPlayer({ audioSrc }) {
                 value={currentTime}
                 onChange={handleSeek}
             />
-            <a className='custom-audio-player-download' href={audioSrc} download>
-               <FontAwesomeIcon icon={faDownload} />
-            </a>
+            <span className="custom-audio-player-time">{formatTime(duration)}</span>
+            {showDownload && (
+                <a className='custom-audio-player-download' href={audioSrc} download aria-label="Scarica audio">
+                   <FontAwesomeIcon icon={faDownload} />
+                </a>
+            )}
             </div>
         </div>
     );

@@ -1,175 +1,203 @@
 .saveloadpreset-container {
   width: 100%;
-  margin-bottom: 20px;
-  height: auto;
-  max-height: 900px;
-  overflow: scroll;
+  max-height: 360px;
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-2) transparent;
+}
+
+.saveloadpreset-container > .text-section-subtitle {
+  margin-bottom: 2px;
+}
+
+.preset-error {
+  color: #ffb4b4;
+  font-size: 12px;
 }
 
 .saveloadpreset-main {
   width: 100%;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 80px;
-  justify-content: space-between;
+  gap: 8px;
 }
 
 .saveloadpreset-main-left {
   width: 100%;
-  min-height: 80px;
-  max-height: 400px;
+  max-height: 120px;
   display: flex;
   flex-direction: column;
-  overflow: scroll;
-  background-color: var(--background-emelents);
-  border: 1px solid var(--gray-0);
+  overflow: auto;
+  background-color: #121214;
+  border: 1px solid var(--panel-border);
   border-radius: 10px;
-  margin: 5px 0px 5px 0px;
 }
 
 .saveloadpreset-main-right {
   width: 100%;
-  height: 150px;
-  margin: 5px 0px 5px 0px;
+  height: auto;
+  margin: 0;
 }
 
 .preset-item {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 18px;
+  gap: 8px;
+  padding: 8px 10px;
   color: var(--gray-7);
-  border-radius: 10px;
-  background-color: var(--gray-0);
+  background-color: var(--panel-raised);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
   margin: 3px;
 }
 
+.preset-item h3 {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .preset-item-buttons {
-  margin-left: auto;
-  margin-right: 0px;
-  height: 30px;
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
+  gap: 5px;
+  margin-left: auto;
 }
 
 .saveloadpreset-search {
   width: 100%;
-  height: 50px;
-  border-radius: 10px;
-  background-color: var(--background-emelents);
-  border: 1px solid var(--gray-0);
+  height: 36px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: row;
+  background-color: #121214;
+  border: 1px solid var(--panel-border);
+  border-radius: 9px;
 }
 
 .saveloadpreset-search-input {
   width: 100%;
   height: 100%;
-  background-color: transparent;
-  border: none;
-  padding: 20px;
+  padding: 0 11px;
   color: var(--light-text-color);
-  font-size: 18px
+  background: transparent;
+  border: none;
+  font-size: 13px;
 }
 
 .saveloadpreset-search-input:focus {
   outline: none;
 }
 
+.saveloadpreset-main-right .text-section-subtitle {
+  margin: 4px 0;
+}
+
+.saveloadpreset-actions-button,
+.loaddelete-actions-button {
+  padding: 7px 10px;
+  margin: 3px;
+  color: var(--gray-6);
+  background-color: var(--panel-raised);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.saveloadpreset-actions-button:hover,
+.loaddelete-actions-button:hover {
+  color: var(--text-color);
+  background-color: #202023;
+  border-color: var(--gray-3);
+}
+
 .dialog-overlay {
   position: fixed;
   inset: 0;
-  background: hsla(0, 0%, 0%, 0.6);
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  padding: 16px;
+  background: #000a;
+  backdrop-filter: blur(5px);
 }
 
 .dialog-box {
-  background: #fff;
-  padding: 24px;
+  width: min(420px, 100%);
+  padding: 22px;
+  color: var(--text-color);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
   border-radius: 16px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  color: #333;
+  box-shadow: 0 18px 50px #0008;
 }
 
 .dialog-box h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
   cursor: pointer;
+}
+
+.dialog-box p {
+  color: var(--gray-6);
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .dialog-input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   margin-top: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  color: var(--text-color);
+  background: #121214;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+}
+
+.dialog-input:focus {
+  outline: none;
+  border-color: var(--gray-4);
 }
 
 .dialog-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 16px;
 }
 
-.dialog-cancel {
-  background: #e0e0e0;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
+.dialog-cancel,
+.dialog-delete {
+  padding: 8px 12px;
+  color: var(--gray-6);
+  background: var(--panel-raised);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
   cursor: pointer;
 }
 
 .dialog-delete {
-  background: #d33;
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
+  color: #09090b;
+  background: var(--gray-7);
+  border-color: var(--gray-7);
 }
 
 .dialog-delete:disabled {
-  background: #999;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-.saveloadpreset-actions-button {
-  background-color: var(--gray-0);
-  color: var(--gray-7);
-  border: 1px solid var(--gray-0);
-  margin: 5px;
-  padding: 9px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.saveloadpreset-actions-button:hover {
-  background-color: var(--gray-7);
-  color: var(--gray-0);
-}
-
-.loaddelete-actions-button {
-  background-color: var(--gray-2);
-  color: var(--gray-7);
-  border: 1px solid var(--gray-2);
-  margin: 5px;
-  padding: 9px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.loaddelete-actions-button:hover {
-  background-color: var(--gray-7);
-  color: var(--gray-0);
+@media (max-width: 520px) {
+  .saveloadpreset-main-right .text-section-subtitle {
+    margin-top: 6px;
+  }
 }
