@@ -57,7 +57,10 @@ function Dashboard() {
               speakerMode={model === "GeminiTTS" && geminiMultiSpeaker ? "multi" : "single"}
               speakerVoices={speakerVoices}
               onSpeakerVoiceChange={(speakerId, voiceName) =>
-                setSpeakerVoices((previous) => ({ ...previous, [speakerId]: voiceName }))
+                setSpeakerVoices((previous) => ({
+                  ...previous,
+                  [speakerId]: previous[speakerId] === voiceName ? "" : voiceName,
+                }))
               }
             />
             <RecentCreations creations={arrayCreazioni} />

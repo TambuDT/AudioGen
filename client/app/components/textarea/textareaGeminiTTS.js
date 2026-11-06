@@ -61,7 +61,7 @@ function parseMultiSpeakerText(value) {
   }
 
   const usedSpeakers = new Set(turns.map((turn) => turn.speaker));
-  if (!usedSpeakers.has("speaker_1") || !usedSpeakers.has("speaker_2")) {
+  if (!usedSpeakers.has("speaker1") || !usedSpeakers.has("speaker2")) {
     return {
       turns: [],
       error: "Inserisci almeno una battuta valida per speaker_1 e speaker_2.",
