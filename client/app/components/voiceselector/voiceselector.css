@@ -15,7 +15,7 @@
   margin-bottom: 5px;
   color: var(--gray-6);
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -23,13 +23,13 @@
 .music-section-subtitle {
   margin-bottom: 12px;
   color: var(--gray-6);
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .speaker-selector-hint {
   margin: 0 0 8px;
   color: var(--gray-6);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.45;
 }
 
@@ -39,7 +39,7 @@
 
 .speaker-voice-name {
   color: var(--text-color);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -56,7 +56,7 @@
   background: #171719;
   border: 1px solid var(--panel-border);
   border-radius: 7px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -91,7 +91,7 @@
   border: 1px solid var(--panel-border);
   border-radius: 9px;
   font: inherit;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .voice-search-input::placeholder {
@@ -110,7 +110,7 @@
   background-color: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: 12px;
-  font-size: 13px;
+  font-size: 15px;
   text-align: center;
 }
 
@@ -166,7 +166,7 @@
   color: var(--text-color);
   background: transparent;
   border: none;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -243,7 +243,7 @@
 
 .attributi-voce {
   color: var(--gray-6);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .voice-item-right-upper {
@@ -288,7 +288,7 @@
   color: var(--gray-6);
   background: transparent;
   border: 0;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   cursor: pointer;
 }
@@ -306,7 +306,7 @@
 
 .voice-description > span {
   color: var(--gray-6);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -322,7 +322,7 @@
   border: 1px solid var(--panel-border);
   border-radius: 9px;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
   overflow-wrap: anywhere;
 }

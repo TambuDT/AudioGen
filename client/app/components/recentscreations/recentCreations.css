@@ -18,6 +18,7 @@
   max-height: 270px;
   display: flex;
   flex-direction: column;
+  gap: 8px;
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -27,16 +28,18 @@
 }
 
 .recents-creations-container .custom-audio-player-container {
+  display: flex;
+  flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  gap: 5px;
-  padding: 8px 10px;
-  margin: 3px 0;
+  gap: 10px;
+  padding: 12px 12px 10px;
+  margin: 0;
   color: var(--text-color);
   background-color: #101012;
   border: 1px solid var(--panel-border);
   border-radius: 12px;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
 .recents-creations-container .custom-audio-player-container:hover {
@@ -47,38 +50,58 @@
 .recents-creations-container .custom-audio-player-title-container {
   width: 100%;
   margin: 0;
-  padding: 0 0 4px;
+  padding: 0;
 }
 
 .recents-creations-container .custom-audio-player-title {
+  width: 100%;
   color: var(--text-color);
-  font-size: 13px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: 16px;
   font-weight: 700;
+  line-height: 1.4;
+}
+
+.recents-creations-container .custom-audio-player-title:focus {
+  outline: none;
 }
 
 .recents-creations-container .custom-audio-player-controls {
-  justify-content: flex-start;
-  gap: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .recents-creations-container .custom-audio-player-play-pause,
 .recents-creations-container .custom-audio-player-download {
-  width: 30px;
-  height: 30px;
-  flex-basis: 30px;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
   color: var(--gray-7);
   background-color: #1b1b1e;
   border: 1px solid #303034;
-  border-radius: 8px;
+  border-radius: 9px;
 }
 
 .recents-creations-container .custom-audio-player-seek {
+  flex: 1 1 auto;
   margin: 0;
+  min-width: 0;
 }
 
 .recents-creations-container .custom-audio-player-model-type {
-  padding: 4px 6px;
-  font-size: 10px;
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--gray-6);
+  background-color: var(--panel-raised);
+  border: 1px solid var(--panel-border);
+  border-radius: 7px;
+  line-height: 1.4;
 }
 
 .recent-creations-empty {
@@ -88,5 +111,5 @@
   background-color: #101012;
   border: 1px solid var(--panel-border);
   border-radius: 12px;
-  font-size: 13px;
+  font-size: 15px;
 }

@@ -55,7 +55,7 @@
   background: transparent;
   border: 1px solid transparent;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
@@ -88,7 +88,7 @@
 .speaker-mode-description {
   margin: 0;
   color: var(--gray-6);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.45;
 }
 
@@ -101,7 +101,7 @@
 .speaker-format-hint {
   margin: 0;
   color: var(--gray-5);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -125,7 +125,7 @@
   background: var(--panel-raised);
   border: 1px solid var(--panel-border);
   border-radius: 8px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -137,14 +137,14 @@
 
 .synthesis-error {
   color: #ffb4b4;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .text-section-title {
   align-self: flex-start;
   color: var(--gray-7);
   text-transform: uppercase;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.4;
   font-weight: 700;
   letter-spacing: 0.025em;
@@ -167,7 +167,7 @@
   align-self: flex-start;
   margin: 0;
   color: var(--gray-6);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
@@ -178,7 +178,7 @@
   padding: 14px;
   color: var(--light-text-color);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.7;
   background-color: #121214;
   border: 1px solid var(--panel-border);
@@ -191,7 +191,7 @@
   height: 200px;
   resize: vertical;
   padding: 14px;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .text-insert-menu {
@@ -210,7 +210,7 @@
   background-color: var(--panel-raised);
   border: 1px solid var(--panel-border);
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   list-style: none;
@@ -472,65 +472,146 @@
 .saved-prompt-selector {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
-.saved-prompt-selector label {
-  color: var(--gray-6);
+.saved-prompt-dropdown {
+  position: relative;
+}
+
+.saved-prompt-dropdown summary {
+  list-style: none;
+}
+
+.saved-prompt-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.saved-prompt-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 30px;
+  padding: 5px 9px;
+  color: var(--gray-7);
+  background-color: var(--panel-raised);
+  border: 1px solid var(--panel-border);
+  border-radius: 7px;
   font-size: 12px;
   font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.saved-prompt-options {
+.saved-prompt-toggle:hover {
+  color: var(--text-color);
+  background-color: #202023;
+  border-color: var(--gray-3);
+}
+
+.saved-prompt-toggle svg {
+  font-size: 10px;
+  transition: transform 0.15s ease;
+}
+
+.saved-prompt-dropdown[open] .saved-prompt-toggle svg {
+  transform: rotate(180deg);
+}
+
+.saved-prompt-menu {
   display: flex;
   flex-direction: column;
   gap: 4px;
   max-height: 170px;
   overflow-y: auto;
+  margin-top: 6px;
   padding: 5px;
   background-color: #121214;
   border: 1px solid var(--panel-border);
   border-radius: 8px;
 }
 
-.saved-prompt-option {
+.saved-prompt-item {
   min-width: 0;
-  min-height: 32px;
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 6px 8px;
+  gap: 6px;
+  padding: 7px;
   color: var(--gray-6);
-  text-align: left;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.saved-prompt-item:hover {
+  color: var(--text-color);
+  background-color: #151518;
+  border-color: var(--gray-4);
+}
+
+.saved-prompt-option {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   font: inherit;
   font-size: 12px;
   cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .saved-prompt-option svg {
   flex: 0 0 auto;
   color: var(--gray-5);
   font-size: 11px;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.saved-prompt-item:hover .saved-prompt-option svg {
+  color: var(--gray-7);
+  transform: scale(1.08);
 }
 
 .saved-prompt-option span {
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.saved-prompt-option:hover {
-  color: var(--text-color);
-  background-color: #19191c;
-  border-color: var(--gray-4);
+.saved-prompt-delete {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--gray-5);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.saved-prompt-option:hover svg {
-  color: var(--gray-7);
+.saved-prompt-delete svg {
+  font-size: 10px;
+}
+
+.saved-prompt-delete:hover {
+  color: #ffb4b4;
+  background-color: transparent;
+  border-color: transparent;
 }
 
 .saved-prompt-help {

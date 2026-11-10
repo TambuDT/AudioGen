@@ -48,7 +48,7 @@ function TextsectionChirp3({ voiceName, onCreate, synthesisRequest }) {
       const response = await axios.post(`${SERVER_URL}/synthesize`, requestBody);
 
       if (response.data?.audioContent) {
-        const newAudioSrc =`data:audio/wav;base64,${response.data.audioContent}`;
+        const newAudioSrc = `data:audio/wav;base64,${response.data.audioContent}`;
 
         setAudioSrc(newAudioSrc);
         onCreate({
@@ -92,8 +92,9 @@ function TextsectionChirp3({ voiceName, onCreate, synthesisRequest }) {
 
   return (
     <div className='textsection-container'>
+      <h2 className="music-section-title">Inserimento dello spot</h2>
       <section className="tts-panel">
-        <h1 className="text-section-title">Inserimento del testo</h1>
+
         <h4 className="text-section-subtitle">Inserisci il testo da convertire in audio</h4>
         <textarea
           value={text}
@@ -102,17 +103,16 @@ function TextsectionChirp3({ voiceName, onCreate, synthesisRequest }) {
           placeholder="Inserisci il testo qui..."
         />
       </section>
-
+      <h2 className="music-section-title">Pronunce personalizzate</h2>
       <section className="tts-panel pronunciation-panel">
         <div className="add-pronuncia-custom-title-container">
-          <h2 className="text-section-title">Pronunce personalizzate</h2>
+          <h4 className="text-section-subtitle">
+            Aggiungi parole da sostituire con pronunce personalizzate
+          </h4>
           <button type="button" className="add-pronuncia-button" onClick={addRow} aria-label="Aggiungi pronuncia personalizzata">
             <span aria-hidden="true">+</span>
           </button>
         </div>
-        <h4 className="text-section-subtitle">
-          Aggiungi parole da sostituire con pronunce personalizzate
-        </h4>
         <div className="parole-custom-container">
           {customPronunce.map((item, idx) => (
             <div key={idx} className="custom-pronuncia-row">

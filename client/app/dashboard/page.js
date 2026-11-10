@@ -24,7 +24,15 @@ function Dashboard() {
   const [synthesisRequest, setSynthesisRequest] = useState(0);
 
   const addCreazione = (creazione) => {
-    setArrayCreazioni(prev => [...prev, creazione]);
+    setArrayCreazioni(prev => {
+      const nextNumber = prev.length + 1;
+      const normalizedName =
+        creazione?.audioName && creazione.audioName !== "Untitled"
+          ? creazione.audioName
+          : `Creazione ${nextNumber}`;
+
+      return [...prev, { ...creazione, audioName: normalizedName }];
+    });
   };
 
   const requestSynthesis = () => {

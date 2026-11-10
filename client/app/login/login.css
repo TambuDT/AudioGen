@@ -14,14 +14,14 @@
 .logo-text {
   margin-bottom: 2px;
   color: var(--text-color);
-  font-size: 25px;
+  font-size: 28px;
   font-weight: 700;
 }
 
 .login-text {
   margin-bottom: 10px;
   color: var(--gray-6);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .input-field {
@@ -31,7 +31,7 @@
   background-color: #121214;
   border: 1px solid var(--panel-border);
   border-radius: 10px;
-  font-size: 15px;
+  font-size: 17px;
   transition: border-color 0.15s ease;
 }
 
@@ -51,7 +51,7 @@
   background-color: var(--gray-7);
   border: 1px solid var(--gray-7);
   border-radius: 10px;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -64,7 +64,7 @@
 .footer-text {
   margin-top: 6px;
   color: var(--gray-5);
-  font-size: 13px;
+  font-size: 15px;
   text-align: center;
 }
 

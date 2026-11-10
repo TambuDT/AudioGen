@@ -305,6 +305,32 @@ function TextsectionGemini({
     }
   }
 
+  async function handleDeletePrompt(promptToDelete) {
+    const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
+    if (!databaseId || !PROMPT_COLLECTION_ID || !promptToDelete?.$id) return;
+
+    if (!window.confirm(`Eliminare il prompt "${promptToDelete.nome_prompt}"?`)) return;
+
+    try {
+      await databases.current.deleteDocument(
+        databaseId,
+        PROMPT_COLLECTION_ID,
+        promptToDelete.$id
+      );
+      setSavedPrompts((currentPrompts) =>
+        currentPrompts.filter((prompt) => prompt.$id !== promptToDelete.$id)
+      );
+      setPromptsError("");
+    } catch (error) {
+      console.error("Errore durante l'eliminazione del prompt:", error);
+      setPromptsError(
+        error?.message?.includes("No permissions provided for action 'delete'")
+          ? "Appwrite blocca la rimozione: abilita il permesso Delete per gli utenti autorizzati nella collection dei prompt."
+          : "Impossibile eliminare il prompt salvato."
+      );
+    }
+  }
+
   const buildRequestBody = useCallback(() => {
     const modifiedText = applyCustomPronunciations(text, customPronunce);
 
@@ -606,13 +632,12 @@ function TextsectionGemini({
           )}
         </div>
       </section>
-
+      <h2 className="music-section-title">Inserimento dello spot</h2>
       <section className="tts-panel spot-input-panel">
         <div className="spot-input-heading">
-          <h1 className="text-section-title">Inserimento dello spot</h1>
           <details className="text-insert-menu" ref={textInsertMenuRef}>
           <summary>
-            <span>Inserisci tag o speaker</span>
+            <span>Inserisci tag</span>
             <FontAwesomeIcon icon={faChevronDown} aria-hidden="true" />
           </summary>
           <div className="text-insert-menu-content">
@@ -676,25 +701,6 @@ function TextsectionGemini({
                 </form>
               )}
             </div>
-            {TEXT_INSERT_OPTIONS
-              .filter((group) => group.title === "Etichette multi-speaker" && speakerMode === "multi")
-              .map((group) => (
-              <div className="text-insert-menu-group" key={group.title}>
-                <h3>{group.title}</h3>
-                <div className="text-insert-menu-options">
-                  {group.options.map(({ token, description, speaker }) => (
-                    <button
-                      type="button"
-                      key={token}
-                      onClick={() => insertTextToken(token, speaker)}
-                    >
-                      <code>{token}</code>
-                      <span>{description}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
           </div>
           </details>
         </div>
@@ -730,7 +736,7 @@ function TextsectionGemini({
       </section>
 
       <section className="tts-section">
-        <h2 className="music-section-title">Prompt per modificare la resa</h2>
+        <h2 className="music-section-title">Prompt per personalizzazione</h2>
         <div className="tts-panel">
           <textarea
             ref={promptTextareaRef}
@@ -741,27 +747,42 @@ function TextsectionGemini({
             aria-label="Prompt per modificare la resa"
           />
           <div className="saved-prompt-selector">
-            <label>Prompt salvati</label>
-            <div className="saved-prompt-options">
-              {savedPrompts.map((item) => (
-                <button
-                  type="button"
-                  className="saved-prompt-option"
-                  key={item.$id}
-                  title={`Inserisci: ${item.nome_prompt}`}
-                  onClick={() => insertSavedPrompt(item.prompt)}
-                >
-                  <FontAwesomeIcon icon={faPlus} aria-hidden="true" />
-                  <span>{item.nome_prompt}</span>
-                </button>
-              ))}
-              {isLoadingPrompts && (
-                <p className="saved-prompt-help">Caricamento prompt...</p>
-              )}
-              {!isLoadingPrompts && savedPrompts.length === 0 && !promptsError && (
-                <p className="saved-prompt-help">Nessun prompt salvato.</p>
-              )}
-            </div>
+            <details className="saved-prompt-dropdown">
+              <summary className="saved-prompt-toggle">
+                <span>Prompt salvati</span>
+                <FontAwesomeIcon icon={faChevronDown} aria-hidden="true" />
+              </summary>
+              <div className="saved-prompt-menu">
+                {isLoadingPrompts && (
+                  <p className="saved-prompt-help">Caricamento prompt...</p>
+                )}
+                {!isLoadingPrompts && savedPrompts.length === 0 && !promptsError && (
+                  <p className="saved-prompt-help">Nessun prompt salvato.</p>
+                )}
+                {savedPrompts.map((item) => (
+                  <div className="saved-prompt-item" key={item.$id}>
+                    <button
+                      type="button"
+                      className="saved-prompt-option"
+                      title={`Inserisci: ${item.nome_prompt}`}
+                      onClick={() => insertSavedPrompt(item.prompt)}
+                    >
+                      <FontAwesomeIcon icon={faPlus} aria-hidden="true" />
+                      <span>{item.nome_prompt}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="saved-prompt-delete"
+                      aria-label={`Elimina prompt ${item.nome_prompt}`}
+                      title={`Elimina prompt ${item.nome_prompt}`}
+                      onClick={() => handleDeletePrompt(item)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} aria-hidden="true" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </details>
             {promptsError && (
               <p className="saved-prompt-error" role="alert">{promptsError}</p>
             )}

@@ -39,7 +39,7 @@ function Navbar({ page, onSynthesize, canSynthesize = true }) {
             aria-label="Sintetizza audio"
           >
             <FontAwesomeIcon icon={faBolt} />
-            <span className="text">Sintetizza</span>
+            <span className="text">Genera</span>
           </button>
           <hr className='button-separator'></hr>
           <button type="button" className="logout-button" onClick={logout}>
