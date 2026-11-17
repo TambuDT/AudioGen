@@ -864,7 +864,7 @@ function TextsectionGemini({
       </section>
 
       <section className="tts-section">
-        <h2 className="music-section-title">Master audio pronto</h2>
+        <h2 className="music-section-title">Audio Generato</h2>
         <div className="tts-panel output-panel">
           {loading ? (
             <p className="testo-generazione-in-corso">Generazione in corso...</p>

@@ -36,6 +36,8 @@ export function VoiceSelector({
   const audioRefs = useRef({});
   const databases = useRef(new Databases(client));
   const saveTimers = useRef({});
+  const pendingSaves = useRef({});
+  const saveQueues = useRef({});
   const loadAbortRef = useRef(null);
   const isMultiSpeaker = speakerMode === 'multi';
   const visibleVoices = isMultiSpeaker
@@ -128,7 +130,6 @@ export function VoiceSelector({
           audio.src = '';
         }
       });
-      Object.values(saveTimers.current).forEach(clearTimeout);
     };
   }, []);
 
@@ -145,11 +146,17 @@ export function VoiceSelector({
 
 
   const saveToDB = useCallback(async (voceOriginale, vocePersonalizzata, descrizione_voce) => {
+    if (typeof voceOriginale !== 'string' || !voceOriginale.trim()) {
+      console.error('Impossibile salvare la voce: nome originale mancante.', voceOriginale);
+      setSaveError('Impossibile salvare le modifiche: nome della voce non valido.');
+      return;
+    }
+
     try {
       const res = await databases.current.listDocuments(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_VOCI_COLLECTION_ID,
-        [Query.equal('voceOriginale', voceOriginale)]
+        [Query.equal('voceOriginale', [voceOriginale])]
       );
 
       if (res.documents.length > 0) {
@@ -174,6 +181,37 @@ export function VoiceSelector({
     }
   }, []);
 
+  const queueSave = useCallback((voceOriginale, voice) => {
+    const previousSave = saveQueues.current[voceOriginale] || Promise.resolve();
+    const nextSave = previousSave.then(() =>
+      saveToDB(voceOriginale, voice.vocePersonalizzata, voice.descrizione_voce)
+    );
+    saveQueues.current[voceOriginale] = nextSave;
+  }, [saveToDB]);
+
+  const flushVoiceSave = useCallback((voceOriginale) => {
+    if (saveTimers.current[voceOriginale]) {
+      clearTimeout(saveTimers.current[voceOriginale]);
+      delete saveTimers.current[voceOriginale];
+    }
+
+    const pendingVoice = pendingSaves.current[voceOriginale];
+    if (!pendingVoice) return;
+
+    delete pendingSaves.current[voceOriginale];
+    queueSave(voceOriginale, pendingVoice);
+  }, [queueSave]);
+
+  useEffect(() => {
+    return () => {
+      Object.values(saveTimers.current).forEach(clearTimeout);
+      Object.entries(pendingSaves.current).forEach(([voceOriginale, voice]) => {
+        queueSave(voceOriginale, voice);
+      });
+      pendingSaves.current = {};
+    };
+  }, [queueSave]);
+
   const handleSelect = useCallback((voceOriginale) => {
     const nextVoice = selectedVoice === voceOriginale ? null : voceOriginale;
     setSelectedVoice(nextVoice);
@@ -182,11 +220,13 @@ export function VoiceSelector({
   }, [onVoiceChange, selectedVoice]);
 
   const handleChange = useCallback((voceOriginale, field, newValue) => {
-    const currentVoice = voiceMetadata[voceOriginale] ||
+    const currentVoice = pendingSaves.current[voceOriginale] ||
+      voiceMetadata[voceOriginale] ||
       arrayVoci.find(voice => voice.voceOriginale === voceOriginale) ||
       { vocePersonalizzata: '', descrizione_voce: '' };
-    const updatedVoice = { ...currentVoice, [field]: newValue };
+    const updatedVoice = { ...currentVoice, voceOriginale, [field]: newValue };
 
+    pendingSaves.current[voceOriginale] = updatedVoice;
     setVoiceMetadata(prev => ({
       ...prev,
       [voceOriginale]: updatedVoice,
@@ -201,14 +241,11 @@ export function VoiceSelector({
     if (saveTimers.current[voceOriginale]) {
       clearTimeout(saveTimers.current[voceOriginale]);
     }
-    saveTimers.current[voceOriginale] = setTimeout(() => {
-      saveToDB(
-        voceOriginale,
-        updatedVoice.vocePersonalizzata,
-        updatedVoice.descrizione_voce
-      );
-    }, DEBOUNCE_SAVE_MS);
-  }, [arrayVoci, saveToDB, voiceMetadata]);
+    saveTimers.current[voceOriginale] = setTimeout(
+      () => flushVoiceSave(voceOriginale),
+      DEBOUNCE_SAVE_MS
+    );
+  }, [arrayVoci, flushVoiceSave, voiceMetadata]);
 
   const handlePlayPause = useCallback((voceOriginale) => {
     const audio = audioRefs.current[voceOriginale];
@@ -343,6 +380,7 @@ export function VoiceSelector({
                       placeholder={voce.voceOriginale}
                       aria-label={`Nome personalizzato per ${voce.voceOriginale}`}
                       onClick={(event) => event.stopPropagation()}
+                      onBlur={() => flushVoiceSave(voce.voceOriginale)}
                       onKeyDown={(event) => event.stopPropagation()}
                       onChange={(event) => handleChange(voce.voceOriginale, 'vocePersonalizzata', event.target.value)}
                     />
@@ -355,7 +393,9 @@ export function VoiceSelector({
                       value={voce.vocePersonalizzata}
                       placeholder={voce.voceOriginale}
                       aria-label={`Nome personalizzato per ${voce.voceOriginale}`}
+                      onClick={(event) => event.stopPropagation()}
                       onKeyDown={(e) => e.stopPropagation()}
+                      onBlur={() => flushVoiceSave(voce.voceOriginale)}
                       onChange={(e) => handleChange(voce.voceOriginale, 'vocePersonalizzata', e.target.value)}
                     />
                     <label className='attributi-voce'>Voce campione · Italiano</label>
@@ -433,6 +473,7 @@ export function VoiceSelector({
                         placeholder="Aggiungi una descrizione per questa voce..."
                         aria-label={`Descrizione della voce ${voce.voceOriginale}`}
                         onClick={(event) => event.stopPropagation()}
+                        onBlur={() => flushVoiceSave(voce.voceOriginale)}
                         onKeyDown={(event) => event.stopPropagation()}
                         onChange={(event) => handleChange(
                           voce.voceOriginale,
@@ -456,6 +497,7 @@ export function VoiceSelector({
                       placeholder="Aggiungi una descrizione per questa voce..."
                       aria-label={`Descrizione della voce ${voce.voceOriginale}`}
                       onClick={(event) => event.stopPropagation()}
+                      onBlur={() => flushVoiceSave(voce.voceOriginale)}
                       onKeyDown={(event) => event.stopPropagation()}
                       onChange={(event) => handleChange(
                         voce.voceOriginale,
