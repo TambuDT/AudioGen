@@ -1,19 +1,25 @@
 'use client'
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './voiceselector.css';
-import { FaPause, FaPlay } from 'react-icons/fa';
-import { client } from '../../appwrite/appwrite';
-import { Databases, Query, ID } from 'appwrite';
+import { account, client } from '../../appwrite/appwrite';
+import { Databases, Query, ID, Storage, Permission, Role } from 'appwrite';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMicrophone } from '@fortawesome/free-solid-svg-icons/faMicrophone';
+import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera';
 import { faPause } from '@fortawesome/free-solid-svg-icons/faPause';
+import { faPlay } from '@fortawesome/free-solid-svg-icons/faPlay';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons/faAngleUp';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons/faAngleDown';
 import { GEMINI_TTS_VOICES } from './geminiTtsVoices';
 
 const SERVER_URL = process.env.NEXT_PUBLIC_APP_ENDPOINT;
 const DEBOUNCE_SAVE_MS = 600;
+const PROFILE_IMAGE_BUCKET_ID = 'immagini_profilo';
+
+function isProfileImageForVoice(file, voiceName) {
+  return file.mimeType?.startsWith('image/') &&
+    (file.name === voiceName || file.name.startsWith(`${voiceName}.`));
+}
 
 export function VoiceSelector({
   onVoiceChange,
@@ -29,12 +35,19 @@ export function VoiceSelector({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saveError, setSaveError] = useState('');
+  const [profileImageError, setProfileImageError] = useState('');
+  const [profileImageFiles, setProfileImageFiles] = useState([]);
+  const [failedProfileImageIds, setFailedProfileImageIds] = useState({});
+  const [profileImagesLoading, setProfileImagesLoading] = useState(true);
+  const [uploadingVoice, setUploadingVoice] = useState(null);
   const [open, setOpen] = useState(false)
   const [expandedSpeakerVoice, setExpandedSpeakerVoice] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const audioRefs = useRef({});
   const databases = useRef(new Databases(client));
+  const storage = useRef(new Storage(client));
+  const profileImageInputRefs = useRef({});
   const saveTimers = useRef({});
   const pendingSaves = useRef({});
   const saveQueues = useRef({});
@@ -119,6 +132,41 @@ export function VoiceSelector({
     return () => {
       cancelled = true;
       controller.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadProfileImages = async () => {
+      try {
+        const files = [];
+        let offset = 0;
+        let page;
+
+        do {
+          page = await storage.current.listFiles({
+            bucketId: PROFILE_IMAGE_BUCKET_ID,
+            queries: [Query.limit(100), Query.offset(offset)],
+          });
+          files.push(...page.files);
+          offset += page.files.length;
+        } while (page.files.length === 100);
+
+        if (!cancelled) setProfileImageFiles(files);
+      } catch (err) {
+        if (cancelled) return;
+        console.error('Errore caricamento immagini profilo:', err);
+        setProfileImageError('Impossibile caricare le immagini profilo.');
+      } finally {
+        if (!cancelled) setProfileImagesLoading(false);
+      }
+    };
+
+    loadProfileImages();
+
+    return () => {
+      cancelled = true;
     };
   }, []);
 
@@ -268,6 +316,78 @@ export function VoiceSelector({
     setPlayingVoice(prev => prev === voceOriginale ? null : prev);
   }, []);
 
+  const handleProfileImageUpload = useCallback(async (voceOriginale, event) => {
+    const input = event.currentTarget;
+    const imageFile = input.files?.[0];
+    input.value = '';
+    if (!imageFile) return;
+
+    if (!imageFile.type.startsWith('image/')) {
+      setProfileImageError('Seleziona un file immagine valido.');
+      return;
+    }
+
+    setProfileImageError('');
+    setUploadingVoice(voceOriginale);
+
+    try {
+      const currentUser = await account.get();
+      const extension = imageFile.name.includes('.')
+        ? imageFile.name.slice(imageFile.name.lastIndexOf('.'))
+        : '';
+      const namedImageFile = new File(
+        [imageFile],
+        `${voceOriginale}${extension}`,
+        { type: imageFile.type, lastModified: imageFile.lastModified }
+      );
+      const uploadedFile = await storage.current.createFile({
+        bucketId: PROFILE_IMAGE_BUCKET_ID,
+        fileId: ID.unique(),
+        file: namedImageFile,
+        permissions: [
+          Permission.read(Role.users()),
+          Permission.update(Role.user(currentUser.$id)),
+          Permission.delete(Role.user(currentUser.$id)),
+        ],
+      });
+      const newProfileImage = {
+        ...uploadedFile,
+        imageUrl: storage.current.getFileView({
+          bucketId: PROFILE_IMAGE_BUCKET_ID,
+          fileId: uploadedFile.$id,
+        }),
+      };
+
+      const previousImages = profileImageFiles.filter(file =>
+        isProfileImageForVoice(file, voceOriginale)
+      );
+      const failedDeletes = [];
+      for (const previousImage of previousImages) {
+        try {
+          await storage.current.deleteFile(PROFILE_IMAGE_BUCKET_ID, previousImage.$id);
+        } catch (err) {
+          console.error('Errore rimozione immagine profilo precedente:', err);
+          failedDeletes.push(previousImage.$id);
+        }
+      }
+
+      setProfileImageFiles(currentFiles => [
+        newProfileImage,
+        ...currentFiles.filter(file =>
+          !isProfileImageForVoice(file, voceOriginale) || failedDeletes.includes(file.$id)
+        ),
+      ]);
+      if (failedDeletes.length > 0) {
+        setProfileImageError('Immagine caricata, ma non è stato possibile rimuovere quella precedente.');
+      }
+    } catch (err) {
+      console.error('Errore caricamento immagine profilo:', err);
+      setProfileImageError('Impossibile caricare l’immagine profilo.');
+    } finally {
+      setUploadingVoice(null);
+    }
+  }, [profileImageFiles]);
+
   if (loading && !isMultiSpeaker) {
     return (
       <div className='musicpicker-container'>
@@ -305,6 +425,7 @@ export function VoiceSelector({
         <p className="speaker-selector-hint">Assegna una voce a ciascuno speaker.</p>
       )}
       {saveError && <p className="error-message" role="alert">{saveError}</p>}
+      {profileImageError && <p className="error-message" role="alert">{profileImageError}</p>}
 
       <input
         type="search"
@@ -321,6 +442,15 @@ export function VoiceSelector({
           const assignedSpeaker = isMultiSpeaker
             ? Object.entries(speakerVoices).find(([, voiceName]) => voiceName === voce.voceOriginale)?.[0]
             : null;
+          const profileImage = profileImageFiles.find(file =>
+            isProfileImageForVoice(file, voce.voceOriginale)
+          );
+          const profileImageUrl = profileImage
+            ? profileImage.imageUrl || storage.current.getFileView({
+              bucketId: PROFILE_IMAGE_BUCKET_ID,
+              fileId: profileImage.$id,
+            })
+            : null;
 
           return (
           <div
@@ -333,7 +463,11 @@ export function VoiceSelector({
             onKeyDown={isMultiSpeaker ? undefined : (e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 // Evita di attivare la selezione se il focus è sull'input o sul pulsante play
-                if (e.target.tagName === 'INPUT' || e.target.getAttribute('role') === 'button') {
+                if (
+                  e.target.tagName === 'INPUT' ||
+                  e.target.tagName === 'BUTTON' ||
+                  e.target.getAttribute('role') === 'button'
+                ) {
                   return;
                 }
                 e.preventDefault();
@@ -351,24 +485,63 @@ export function VoiceSelector({
                 preload="none"
               />
 
-              <div
-                role="button"
-                tabIndex={0}
-                aria-label={playingVoice === voce.voceOriginale ? 'Pausa anteprima' : 'Riproduci anteprima'}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePlayPause(voce.voceOriginale);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
+              <div className="voice-avatar-control">
+                <button
+                  type="button"
+                  aria-label={playingVoice === voce.voceOriginale ? 'Pausa anteprima' : `Riproduci anteprima di ${voce.voceOriginale}`}
+                  onClick={(e) => {
                     e.stopPropagation();
                     handlePlayPause(voce.voceOriginale);
-                  }
-                }}
-                className="play-button"
-              >
-                {playingVoice === voce.voceOriginale ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faMicrophone} />}
+                  }}
+                  className={`play-button voice-avatar-button ${playingVoice === voce.voceOriginale ? 'playing' : ''}`}
+                >
+                  {profileImageUrl && !failedProfileImageIds[profileImage.$id] ? (
+                    <img
+                      src={profileImageUrl}
+                      alt=""
+                      onError={() => {
+                        setFailedProfileImageIds(current => ({
+                          ...current,
+                          [profileImage.$id]: true,
+                        }));
+                        setProfileImageError(`Impossibile visualizzare l’immagine per ${voce.voceOriginale}.`);
+                      }}
+                    />
+                  ) : (
+                    <span className="voice-avatar-placeholder" aria-hidden="true">
+                      {voce.voceOriginale.slice(0, 1).toLocaleUpperCase('it')}
+                    </span>
+                  )}
+                  <span className="voice-avatar-play-indicator" aria-hidden="true">
+                    {playingVoice === voce.voceOriginale
+                      ? <FontAwesomeIcon icon={faPause} />
+                      : <FontAwesomeIcon icon={faPlay} />}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="voice-image-upload"
+                  aria-label={`Carica immagine profilo per ${voce.voceOriginale}`}
+                  title={uploadingVoice === voce.voceOriginale ? 'Caricamento immagine...' : 'Carica immagine profilo'}
+                  disabled={profileImagesLoading || uploadingVoice !== null}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    profileImageInputRefs.current[voce.voceOriginale]?.click();
+                  }}
+                >
+                  <FontAwesomeIcon icon={faCamera} />
+                </button>
+                <input
+                  ref={element => {
+                    profileImageInputRefs.current[voce.voceOriginale] = element;
+                  }}
+                  className="voice-image-input"
+                  type="file"
+                  accept="image/*"
+                  aria-label={`Seleziona immagine profilo per ${voce.voceOriginale}`}
+                  onClick={event => event.stopPropagation()}
+                  onChange={event => handleProfileImageUpload(voce.voceOriginale, event)}
+                />
               </div>
 
               <div className='voice-item-middle-upper'>
