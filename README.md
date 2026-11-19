@@ -12,9 +12,14 @@
 
 AudioGen è una web app per trasformare testo in audio, scegliere voci sintetiche, salvare preset e organizzare più clip in un mixer direttamente dal browser.
 
-## Demo
+## Single Speaker
 
 ![Dashboard AudioGen](assets/dashboard.png)
+
+
+## Multi Speaker
+
+![Dashboard AudioGen](assets/dashboard_multi.png)
 
 ## Funzionalità
 
